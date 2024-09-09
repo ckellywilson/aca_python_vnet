@@ -8,7 +8,8 @@ services:
       dockerfile: ./Dockerfile
     environment:
       - "PRINTER_NAME=PDF"
-      - "HOST=13.84.25.140:631"
+      - "HOST=13.65.122.43:631"
+      - "FOLDER_PATH=/upload"
     volumes:
       - /home/vscode/upload/:/upload/
 
