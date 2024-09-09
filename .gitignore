@@ -33,6 +33,9 @@ override.tf.json
 # example: *tfplan*
 **/*tfplan*
 
+# Ignore .terraform directories
+**/.terraform/*
+
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
