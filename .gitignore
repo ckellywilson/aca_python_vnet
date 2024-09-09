@@ -1,0 +1,12 @@
+# Ignore Terraform files
+**/.tfstate
+**/.tfstate.backup
+**/.tfvars
+**/.terraform/
+
+# Ignore Python non-essential files
+**/.pyc
+**/__pycache__/
+**/.egg-info/
+**/dist/
+**/build/

@@ -109,10 +109,18 @@ module "identity" {
 }
 
 module "aca_env" {
-  source              = "./modules/aca/env"
+  source              = "./modules/aca/aca-env"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
-  infrastructure_subnet_id = module.vnet_cloud.aca_subnet_id
+  identity_id         = module.identity.id
+  tags                = var.tags
+}
+
+module "aca-print" {
+  source              = "./modules/aca/aca-print"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  aca_env_id          = module.aca_env.id
   tags                = var.tags
 }
 
