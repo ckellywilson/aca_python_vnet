@@ -5,23 +5,23 @@ sudo apt-get update
 sudo apt-get install ssh -y
 
 # Create a group for SFTP users
-sudo groupadd sftpusers
+sudo groupadd sftp
 
 # Create a user and add it to the SFTP users group
-sudo useradd -m $USER -g sftpusers
-
-# Set the user's password
-sudo passwd $USER
+sudo useradd -m $USER -g sftp
 
 # Set directory permissions
 sudo chmod 700 /home/$USER/
 
-# Modify OpenSSH server configuration to use internal-sftp
-sudo sed -i 's/Subsystem sftp \/usr\/lib\/openssh\/sftp-server/Subsystem sftp internal-sftp/' /etc/ssh/sshd_config
+# Open the SSH config file
+sudo vi /etc/ssh/sshd_config
+
+# NOTE: Find the Subsystem sftp line and replace it with the following line 'Subsystem sftp  internal-sftp'
+# close the file by pressing 'Esc' and typing ':wq' and pressing 'Enter'
 
 # Add the following lines to the end of the file
 sudo tee -a /etc/ssh/sshd_config <<EOF
-Match Group sftpusers
+Match Group sftp
     ChrootDirectory /home
     ForceCommand internal-sftp
     X11Forwarding no

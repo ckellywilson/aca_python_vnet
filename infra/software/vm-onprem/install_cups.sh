@@ -26,6 +26,11 @@ echo "Opening the CUPS config file..."
 sudo sed -i 's/DefaultEncryption IfRequested/DefaultEncryption Never/g' /etc/cups/cupsd.conf
 echo "Line added to the CUPS config file."
 
+# Share the printer "PDF"
+echo "Sharing the printer 'PDF'..."
+lpadmin -p PDF -o printer-is-shared=true
+echo "Printer 'PDF' shared."
+
 # Restart CUPS service
 echo "Restarting CUPS service..."
 sudo systemctl restart cups.service

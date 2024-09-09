@@ -22,7 +22,7 @@ locals {
       protocol                   = "*"
       source_port_range          = "*"
       destination_port_range     = "22"
-      source_address_prefix      = "VirtualNetwork"
+      source_address_prefix      = "*"
       destination_address_prefix = "*"
     }
 
@@ -34,8 +34,8 @@ locals {
       protocol                   = "*"
       source_port_range          = "*"
       destination_port_range     = "631"
-      source_address_prefix      = "VirtualNetwork"
-      destination_address_prefix = "VirtualNetwork"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
     }
   }
 }

@@ -19,7 +19,7 @@
 				"docker-build"
 			],
 			"python": {
-				"file": "src/cronjob/app.py"
+				"file": "src/print/app.py"
 			}
 		}
 	]

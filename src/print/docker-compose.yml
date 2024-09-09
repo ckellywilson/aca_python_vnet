@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  print:
+    image: print
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - "PRINTER_NAME=PDF"
+      - "HOST=13.84.25.140:631"
+    volumes:
+      - /home/vscode/upload/:/upload/
+
