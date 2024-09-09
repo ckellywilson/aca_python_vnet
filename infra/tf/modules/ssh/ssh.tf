@@ -1,3 +1,8 @@
+variable "prefix" {
+  description = "The prefix to be used for all resources in this module."
+  type        = string
+}
+
 variable "location" {
   description = "The location/region where the SSH key should be created."
   type        = string
@@ -14,7 +19,7 @@ variable "ssh_key" {
 }
 
 resource "azurerm_ssh_public_key" "ssh" {
-  name                = "example-ssh-key"
+  name                = "${var.prefix}-ssh-key"
   location            = var.location
   resource_group_name = var.resource_group_name
   public_key          = var.ssh_key

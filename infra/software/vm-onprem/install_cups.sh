@@ -21,6 +21,11 @@ echo "Installing CUPS PDF..."
 sudo apt-get install printer-driver-cups-pdf -y
 echo "CUPS PDF installed."
 
+# Open the CUPS config file and add the following line: DefaultEncryption Never
+echo "Opening the CUPS config file..."
+sudo sed -i 's/DefaultEncryption IfRequested/DefaultEncryption Never/g' /etc/cups/cupsd.conf
+echo "Line added to the CUPS config file."
+
 # Restart CUPS service
 echo "Restarting CUPS service..."
 sudo systemctl restart cups.service

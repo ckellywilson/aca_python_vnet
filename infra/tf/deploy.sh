@@ -61,7 +61,8 @@ cat > main.tfvars <<EOF
 prefix            = "rheem"
 location          = "southcentralus"
 subscription_id   = "494116cb-e794-4266-98e5-61c178d62cb4"
-vm_admin_username = "vmadmin"
+vm_admin_username = "vscode"
+vm_admin_password = "P@ssw0rd123!"
 ssh_key      = "$sshKey"
 tags = {
   environment = "dev"
@@ -71,6 +72,6 @@ EOF
 
 # Run Terraform commands using the environment variables
 terraform init
-terraform plan -var-file=main.tfvars -out=tfplan
+#terraform plan -var-file=main.tfvars -out=tfplan
 # Run Terraform apply
-# terraform apply -var-file=main.tfvars
+terraform apply -var-file=main.tfvars

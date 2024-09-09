@@ -49,6 +49,14 @@ resource "azurerm_resource_group" "rg" {
   tags     = var.tags
 }
 
+module "ssh" {
+  source              = "./modules/ssh"
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  ssh_key             = var.ssh_key
+}
+
 module "vnet_onprem" {
   source              = "./modules/vnet/onprem"
   location            = var.location
@@ -78,7 +86,7 @@ module "vm_cloud" {
   resource_group_name = azurerm_resource_group.rg.name
   vm_admin_username   = var.vm_admin_username
   nic_id              = module.vnet_cloud.nic_id
-  ssh_key             = var.ssh_key
+  ssh_key             = module.ssh.ssh_public_key
   tags                = var.tags
 }
 
@@ -88,7 +96,7 @@ module "vm_onprem" {
   resource_group_name = azurerm_resource_group.rg.name
   vm_admin_username   = var.vm_admin_username
   nic_id              = module.vnet_onprem.nic_id
-  ssh_key             = var.ssh_key
+  ssh_key             = module.ssh.ssh_public_key
   tags                = var.tags
 }
 

@@ -1,15 +1,16 @@
+import os
 import paramiko
 import paramiko.ecdsakey
 
 # Define the SSH key file path
-ssh_key_path = '/home/vscode/.ssh/id_ed25519.pem'
+ssh_key_path = '/home/vscode/.ssh/id_ed25519'
 
 # Define the SFTP server details
-hostname = '13.65.123.181'
+hostname = '104.210.201.253'
 port = 22
 username = 'vscode'
-remote_path = '/home/vscode/uploadFiles'
-local_path = '/home/vscode/sftpFiles/hello.txt'
+remote_path = '/home/vscode/sftpfiles/'
+local_path = '/home/vscode/sftpfiles/hello.txt'
 
 # Create an SSH client
 ssh_client = paramiko.SSHClient()
