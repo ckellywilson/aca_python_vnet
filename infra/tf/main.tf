@@ -100,3 +100,19 @@ module "vm_onprem" {
   tags                = var.tags
 }
 
+module "identity" {
+  source              = "./modules/identity/user-identity"
+  prefix              = var.prefix
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.tags
+}
+
+module "aca_env" {
+  source              = "./modules/aca/env"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  infrastructure_subnet_id = module.vnet_cloud.aca_subnet_id
+  tags                = var.tags
+}
+

@@ -24,7 +24,14 @@ resource "azurerm_subnet" "subnet_cloud" {
   name                 = "subnet-cloud"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_cloud.name
-  address_prefixes     = ["10.1.0.0/24"]
+  address_prefixes     = ["10.1.0.0/23"]
+}
+
+resource "azurerm_subnet" "subnet_cloud_aca" {
+  name                 = "subnet-cloud-aca"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_cloud.name
+  address_prefixes     = ["10.1.2.0/23"]
 }
 
 resource "azurerm_public_ip" "public_ip_cloud" {
@@ -69,6 +76,14 @@ output "id" {
 
 output "name" {
   value = azurerm_virtual_network.vnet_cloud.name
+}
+
+output "cloud_subnet_id" {
+  value = azurerm_subnet.subnet_cloud.id
+}
+
+output "aca_subnet_id" {
+  value = azurerm_subnet.subnet_cloud_aca.id
 }
 
 output "nic_id" {
