@@ -28,10 +28,27 @@ resource "azurerm_subnet" "subnet_onprem" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
-output "name" {
-  value = azurerm_virtual_network.vnet_onprem.name
+# Create a network interface for the subnet
+resource "azurerm_network_interface" "nic_onprem" {
+  name                = "nic-onprem"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  ip_configuration {
+    name                          = "ipconfig-onprem"
+    subnet_id                     = azurerm_subnet.subnet_onprem.id
+    private_ip_address_allocation = "Dynamic"
+  }
 }
 
 output "id" {
   value = azurerm_virtual_network.vnet_onprem.id
+}
+
+output "name" {
+  value = azurerm_virtual_network.vnet_onprem.name
+}
+
+output "nic_id" {
+  value = azurerm_network_interface.nic_onprem.id
 }
