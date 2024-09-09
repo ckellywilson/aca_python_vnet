@@ -109,18 +109,20 @@ module "identity" {
 }
 
 module "aca_env" {
-  source              = "./modules/aca/aca-env"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  identity_id         = module.identity.id
-  tags                = var.tags
+  source                   = "./modules/aca/env"
+  location                 = var.location
+  resource_group_name      = azurerm_resource_group.rg.name
+  infrastructure_subnet_id = module.vnet_cloud.aca_subnet_id
+  tags                     = var.tags
 }
 
-module "aca-print" {
-  source              = "./modules/aca/aca-print"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  aca_env_id          = module.aca_env.id
-  tags                = var.tags
-}
+# module "aca-dns" {
+#   source                = "./modules/dns/dns-zone"
+#   location              = var.location
+#   resource_group_name   = azurerm_resource_group.rg.name
+#   aca_env_host_name     = module.aca_env.aca_default_domain
+#   aca_static_ip_address = module.aca_env.aca_static_ip_address
+#   tags                  = var.tags
+# }
+
 

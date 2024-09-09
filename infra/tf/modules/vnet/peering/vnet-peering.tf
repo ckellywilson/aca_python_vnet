@@ -15,7 +15,7 @@ variable "vnet_cloud_id" {
 }
 
 variable "resource_group_name" {
-  description = "The name of the resource group in which to create the virtual network peering"  
+  description = "The name of the resource group in which to create the virtual network peering"
 }
 
 resource "azurerm_virtual_network_peering" "vnet_peering_onprem_to_cloud" {
