@@ -2,14 +2,14 @@ import paramiko
 import paramiko.ecdsakey
 
 # Define the SSH key file path
-ssh_key_path = '/home/chwil/.ssh/id_ed25519'
+ssh_key_path = '/home/vscode/.ssh/id_rsa'
 
 # Define the SFTP server details
-hostname = '13.65.122.43'
+hostname = '13.84.174.40'
 port = 22
 username = 'vscode'
-remote_path = '/vscode/'
-local_path = '/home/chwil/upload/test.txt'
+remote_path = '/home/vscode/upload/test.txt'
+local_path = '/home/vscode/upload/test.txt'
 
 # Create an SSH client
 ssh_client = paramiko.SSHClient()
@@ -17,7 +17,7 @@ sftp_client = None
 
 try:
     # Load the SSH key
-    private_key = paramiko.Ed25519Key(filename=ssh_key_path)
+    private_key = paramiko.RSAKey(filename=ssh_key_path)
 
     # Automatically add the server's host key
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
