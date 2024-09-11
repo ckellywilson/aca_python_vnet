@@ -2,11 +2,12 @@
 **/.vscode
 
 # Ignore Terraform files
-**/*.tfstate
-**/*.tfstate.backup
+**/*.tfstate.*
+**/*.tfstate.*
 **/*.tfvars
-**/*.terraform/
-**/*.terraform.lock.hcl
+**/*.terraform.*
+**/terraform.*
+**/.terraform
 
 # Ignore Python non-essential files
 **/*.pyc

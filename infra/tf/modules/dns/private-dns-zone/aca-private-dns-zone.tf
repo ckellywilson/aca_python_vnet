@@ -41,7 +41,7 @@ resource "azurerm_private_dns_zone" "aca_private_dns_zone" {
 }
 
 resource "azurerm_private_dns_a_record" "aca_private_dns_record" {
-  name                = var.aca_env_default_domain
+  name                = "*" # Wildcard DNS record
   zone_name           = azurerm_private_dns_zone.aca_private_dns_zone.name
   resource_group_name = var.resource_group_name
   ttl                 = 300

@@ -35,6 +35,11 @@ resource "azurerm_container_app_environment" "aca_env" {
   infrastructure_subnet_id   = var.infrastructure_subnet_id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.aca_log_analytics.id
   tags                       = var.tags
+
+  workload_profile {
+    name                  = "aca-workload-profile"
+    workload_profile_type = "Consumption"
+  }
 }
 
 output "aca_env_id" {
@@ -50,4 +55,4 @@ output "aca_static_ip_address" {
 output "aca_default_domain" {
   description = "The host name of the ACA environment"
   value       = azurerm_container_app_environment.aca_env.default_domain
-} 
+}

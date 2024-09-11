@@ -18,6 +18,15 @@ resource "azurerm_container_app" "aca_sample" {
   container_app_environment_id = var.container_app_environment_id
   tags                         = var.tags
 
+  ingress {
+    target_port = 80
+    traffic_weight {
+      percentage      = 100
+      latest_revision = true
+    }
+    external_enabled = true
+  }
+
   template {
     container {
       name   = "quickstart"
