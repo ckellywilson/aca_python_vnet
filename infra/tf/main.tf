@@ -19,8 +19,8 @@ variable "vm_admin_username" {
   sensitive   = true
 }
 
-variable "ssh_key" {
-  description = "SSH public key"
+variable "ssh_key_file" {
+  description = "SSH public key file"
   type        = string
 }
 
@@ -54,7 +54,7 @@ module "ssh" {
   prefix              = var.prefix
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
-  ssh_key             = var.ssh_key
+  ssh_key_file        = var.ssh_key_file
 }
 
 module "vnet_onprem" {

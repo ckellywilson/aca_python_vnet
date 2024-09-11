@@ -13,6 +13,12 @@ variable "infrastructure_subnet_id" {
   type        = string
 }
 
+variable "aca_visibility" {
+  description = "The visibility of the ACA environment"
+  default     = "Public"
+  type        = string
+}
+
 variable "tags" {
   description = "A map of tags to add to the resources"
   type        = map(string)
@@ -29,12 +35,13 @@ resource "azurerm_log_analytics_workspace" "aca_log_analytics" {
 }
 
 resource "azurerm_container_app_environment" "aca_env" {
-  name                       = "aca-environment"
-  resource_group_name        = var.resource_group_name
-  location                   = var.location
-  infrastructure_subnet_id   = var.infrastructure_subnet_id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.aca_log_analytics.id
-  tags                       = var.tags
+  name                           = "aca-environment"
+  resource_group_name            = var.resource_group_name
+  location                       = var.location
+  infrastructure_subnet_id       = var.infrastructure_subnet_id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.aca_log_analytics.id
+  internal_load_balancer_enabled = var.aca_visibility == "Private" ? true : false
+  tags                           = var.tags
 
   workload_profile {
     name                  = "Consumption"

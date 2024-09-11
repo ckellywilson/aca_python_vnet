@@ -22,12 +22,12 @@ echo "subscription_id: $subscription_id"
 
 # create rsa ssh key
 echo "Creating rsa ssh key..."
-ssh-keygen -m PEM -t ed25519 -f ~/.ssh/id_ed25519.pem
+ssh-keygen -m PEM -t ed25519 -f ~/.ssh/id_ed25519
 echo "SSH key created successfully."
 
 # get public key
 echo "Getting public key..."
-sshKey=$(cat ~/.ssh/id_ed25519.pem.pub)
+sshKey=$(cat ~/.ssh/id_ed25519.pub)
 echo "sshKey: $sshKey"
 
 # # Set service principal name
@@ -62,7 +62,8 @@ prefix            = "rheem"
 location          = "$location"
 subscription_id   = "494116cb-e794-4266-98e5-61c178d62cb4"
 vm_admin_username = "vscode"
-ssh_key      = "$sshKey"
+ssh_key_file = "~/.ssh/id_ed25519.pub"
+deployment_visibility = "Public" # "Public" or "Private"
 tags = {
   environment = "dev"
   owner       = "rheem"
