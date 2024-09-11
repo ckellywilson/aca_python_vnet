@@ -37,7 +37,7 @@ resource "azurerm_container_app_environment" "aca_env" {
   tags                       = var.tags
 
   workload_profile {
-    name                  = "aca-workload-profile"
+    name                  = "Consumption"
     workload_profile_type = "Consumption"
   }
 }

@@ -1,8 +1,18 @@
 version: '3.4'
 
 services:
-  acapythonvnet:
-    image: acapythonvnet
+  sftp-client:
+    image: sftp-client
     build:
       context: .
       dockerfile: ./Dockerfile
+    container_name: sftp-client
+    volumes:
+      - ~/upload:/upload
+    environment:
+      - SSH_KEY_PATH="/home/$${env:USER}/.ssh/id_rsa"
+      - SFTP_SERVER=13.84.174.40
+      - SFTP_PORT=22
+      - SFTP_USERNAME=vscode
+      - SFTP_REMOTE_PATH=/home/vscode/upload
+      - SFTP_LOCAL_PATH=/home/vscode/upload

@@ -32,6 +32,12 @@ resource "azurerm_subnet" "subnet_cloud_aca" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_cloud.name
   address_prefixes     = ["10.1.2.0/23"]
+  delegation {
+    name = "Microsoft.App/environments"
+    service_delegation {
+      name = "Microsoft.App/environments"
+    }
+  }
 }
 
 resource "azurerm_public_ip" "public_ip_cloud" {
