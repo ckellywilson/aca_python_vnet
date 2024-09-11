@@ -20,40 +20,40 @@ echo "Getting the subscription ID..."
 subscription_id=$(az account show --query "id" --output tsv)
 echo "subscription_id: $subscription_id"
 
-# create ed25519 ssh key
-echo "Creating ed25519 ssh key..."
-ssh-keygen -m PEM -t ed25519 -f ~/.ssh/id_ed25519 -q -N ""
+# create rsa ssh key
+echo "Creating rsa ssh key..."
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
 echo "SSH key created successfully."
 
 # get public key
 echo "Getting public key..."
-sshKey=$(cat ~/.ssh/id_ed25519.pub)
+sshKey=$(cat ~/.ssh/id_rsa.pub)
 echo "sshKey: $sshKey"
 
-# Set service principal name
-echo "Setting the service principal name..."
-spName="${prefix}-sub-sp"
-echo "spName: $spName"
+# # Set service principal name
+# echo "Setting the service principal name..."
+# spName="${prefix}-sub-sp"
+# echo "spName: $spName"
 
-# Create the service principal
-json=$(az ad sp create-for-rbac --name $spName --role Contributor --scopes /subscriptions/${subscription_id})
+# # Create the service principal
+# json=$(az ad sp create-for-rbac --name $spName --role Contributor --scopes /subscriptions/${subscription_id})
 
-# Get App ID
-echo "Getting the App ID..."
-appId=$(az ad sp list --query "[?displayName=='$spName'].appId" --all --output tsv)
-echo "appId: $appId"
+# # Get App ID
+# echo "Getting the App ID..."
+# appId=$(az ad sp list --query "[?displayName=='$spName'].appId" --all --output tsv)
+# echo "appId: $appId"
 
 
-# read password
-echo "Reading password..."
-password=$(echo $json | jq -r .password)
-echo "password: $password"
+# # read password
+# echo "Reading password..."
+# password=$(echo $json | jq -r .password)
+# echo "password: $password"
 
-# Store the output in Terraform environment variables
-export ARM_CLIENT_ID=$appId
-export ARM_CLIENT_SECRET=$password
-export ARM_SUBSCRIPTION_ID=$subscription_id
-export ARM_TENANT_ID=$(az account show --query tenantId --output tsv)
+# # Store the output in Terraform environment variables
+# export ARM_CLIENT_ID=$appId
+# export ARM_CLIENT_SECRET=$password
+# export ARM_SUBSCRIPTION_ID=$subscription_id
+# export ARM_TENANT_ID=$(az account show --query tenantId --output tsv)
 
 # Create a tfvars file
 echo "Creating a tfvars file..."

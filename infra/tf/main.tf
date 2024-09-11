@@ -116,13 +116,14 @@ module "aca_env" {
   tags                     = var.tags
 }
 
-# module "aca-dns" {
-#   source                = "./modules/dns/dns-zone"
-#   location              = var.location
-#   resource_group_name   = azurerm_resource_group.rg.name
-#   aca_env_host_name     = module.aca_env.aca_default_domain
-#   aca_static_ip_address = module.aca_env.aca_static_ip_address
-#   tags                  = var.tags
-# }
+module "aca_private_dns" {
+  source                 = "./modules/dns/private-dns-zone"
+  location               = var.location
+  resource_group_name    = azurerm_resource_group.rg.name
+  aca_env_default_domain = module.aca_env.aca_default_domain
+  aca_static_ip_address  = module.aca_env.aca_static_ip_address
+  cloud_vnet_id          = module.vnet_cloud.id
+  tags                   = var.tags
+}
 
 

@@ -22,7 +22,8 @@ resource "azurerm_ssh_public_key" "ssh" {
   name                = "${var.prefix}-ssh-key"
   location            = var.location
   resource_group_name = var.resource_group_name
-  public_key          = var.ssh_key
+  public_key          = file("~/.ssh/id_rsa.pub")
+
 }
 
 output "ssh_public_key" {
