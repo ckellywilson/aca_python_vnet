@@ -22,12 +22,12 @@ echo "subscription_id: $subscription_id"
 
 # create rsa ssh key
 echo "Creating rsa ssh key..."
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+ssh-keygen -m PEM -t ed25519 -f ~/.ssh/id_ed25519.pem
 echo "SSH key created successfully."
 
 # get public key
 echo "Getting public key..."
-sshKey=$(cat ~/.ssh/id_rsa.pub)
+sshKey=$(cat ~/.ssh/id_ed25519.pem.pub)
 echo "sshKey: $sshKey"
 
 # # Set service principal name
@@ -59,7 +59,7 @@ echo "sshKey: $sshKey"
 echo "Creating a tfvars file..."
 cat > main.tfvars <<EOF
 prefix            = "rheem"
-location          = "southcentralus"
+location          = "$location"
 subscription_id   = "494116cb-e794-4266-98e5-61c178d62cb4"
 vm_admin_username = "vscode"
 ssh_key      = "$sshKey"
