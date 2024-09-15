@@ -130,5 +130,6 @@ module "aca_app_sample" {
   source                       = "./modules/aca/app-sample"
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = module.aca_env.aca_env_id
+  user_assigned_identity_id    = module.identity.identity_id
   tags                         = var.tags
 }

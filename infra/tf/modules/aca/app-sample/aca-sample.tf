@@ -6,6 +6,10 @@ variable "container_app_environment_id" {
   type = string
 }
 
+variable "user_assigned_identity_id" {
+  type = string
+}
+
 variable "tags" {
   type    = map(string)
   default = {}
@@ -34,5 +38,10 @@ resource "azurerm_container_app" "aca_sample" {
       cpu    = 0.25
       memory = "0.5Gi"
     }
+  }
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [var.user_assigned_identity_id]
   }
 }
