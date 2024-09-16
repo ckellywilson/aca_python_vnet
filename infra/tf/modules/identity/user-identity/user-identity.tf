@@ -22,7 +22,7 @@ resource "azurerm_user_assigned_identity" "user_managed_identity" {
   location            = var.location
 }
 
-output "identity_id" {
+output "id" {
   description = "The ID of the user assigned identity."
   value       = azurerm_user_assigned_identity.user_managed_identity.id
 }

@@ -24,6 +24,11 @@ variable "ssh_key_file" {
   type        = string
 }
 
+variable "deployment_visibility" {
+  description = "Deployment visibility"
+  type        = string
+}
+
 variable "tags" {
   description = "Tags for the resources"
   type        = map(string)
@@ -113,6 +118,7 @@ module "aca_env" {
   location                 = var.location
   resource_group_name      = azurerm_resource_group.rg.name
   infrastructure_subnet_id = module.vnet_cloud.aca_subnet_id
+  deployment_visibility    = var.deployment_visibility
   tags                     = var.tags
 }
 
@@ -130,6 +136,22 @@ module "aca_app_sample" {
   source                       = "./modules/aca/app-sample"
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = module.aca_env.aca_env_id
-  user_assigned_identity_id    = module.identity.identity_id
+  user_assigned_principal_id   = module.identity.id
   tags                         = var.tags
+}
+
+module "acr_aca" {
+  source              = "./modules/acr"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  prefix              = var.prefix
+
+}
+
+module "role_assign_acr" {
+  source                     = "./modules/role-assign/acr"
+  resource_group_name        = azurerm_resource_group.rg.name
+  location                   = var.location
+  user_identity_principal_id = module.identity.id
+  acr_id                     = module.acr_aca.acr_id
 }

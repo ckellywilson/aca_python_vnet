@@ -6,7 +6,7 @@ variable "container_app_environment_id" {
   type = string
 }
 
-variable "user_assigned_identity_id" {
+variable "user_assigned_principal_id" {
   type = string
 }
 
@@ -42,6 +42,6 @@ resource "azurerm_container_app" "aca_sample" {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [var.user_assigned_identity_id]
+    identity_ids = [var.user_assigned_principal_id]
   }
 }
