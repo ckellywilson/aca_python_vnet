@@ -30,6 +30,8 @@
 				"GitHub.copilot-chat"
 			]
 		}
+	},
+	"postCreateCommand": "chmod +x ./.devcontainer/postCreateCommand.sh && ./.devcontainer/postCreateCommand.sh"
 	}
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
