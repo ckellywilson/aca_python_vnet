@@ -137,7 +137,7 @@ module "aca_py_sample" {
   source                       = "./modules/aca/py-sample"
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = module.aca_env.aca_env_id
-  user_assigned_principal_id   = module.identity.id
+  user_managed_id              = module.identity.id
   acr_login_server             = module.acr_aca.acr_login_server
   py_sample_image              = var.py_sample_image
   tags                         = var.tags

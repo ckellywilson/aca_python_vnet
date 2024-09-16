@@ -6,7 +6,7 @@ variable "container_app_environment_id" {
   type = string
 }
 
-variable "user_assigned_principal_id" {
+variable "user_managed_id" {
   type = string
 }
 
@@ -23,7 +23,7 @@ variable "tags" {
   default = {}
 }
 
-resource "azurerm_container_app" "py_sample" {
+resource "azurerm_container_app" "py-sample" {
   name                         = "py-sample"
   resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
@@ -42,14 +42,21 @@ resource "azurerm_container_app" "py_sample" {
   template {
     container {
       name   = "py-sample"
-      image  = "${var.acr_login_server}/${var.py_sample_image}"
+      image  = "acaacrrheem.azurecr.io/py-sample:latest"
       cpu    = 0.25
       memory = "0.5Gi"
     }
   }
 
   identity {
-    type         = "UserAssigned"
-    identity_ids = [var.user_assigned_principal_id]
+    type = "UserAssigned"
+    identity_ids = [
+      var.user_managed_id
+    ]
+  }
+
+  registry {
+    server   = var.acr_login_server
+    identity = var.user_managed_id
   }
 }

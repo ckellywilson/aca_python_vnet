@@ -32,7 +32,7 @@ echo "sshKey: $sshKey"
 
 # Build py-sample Docker image
 echo "Building py-sample Docker image..."
-docker build -t py-sample:latest -f src/py-sample/Dockerfile src/py-sample/.
+docker build -t py-sample:latest --platform=linux/amd64 -f src/py-sample/Dockerfile src/py-sample/.
 echo "py-sample Docker image built successfully."
 
 # change to terraform directory
