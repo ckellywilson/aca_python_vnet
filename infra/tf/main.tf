@@ -34,6 +34,11 @@ variable "tags" {
   type        = map(string)
 }
 
+locals {
+  resource_group_name                = "${var.prefix}-rg"
+  infrastructure_resource_group_name = "${var.prefix}-infra-rg"
+}
+
 terraform {
   required_providers {
     azurerm = {
@@ -49,7 +54,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "${var.prefix}-rg"
+  name     = local.resource_group_name
   location = var.location
   tags     = var.tags
 }
@@ -114,12 +119,13 @@ module "identity" {
 }
 
 module "aca_env" {
-  source                   = "./modules/aca/env"
-  location                 = var.location
-  resource_group_name      = azurerm_resource_group.rg.name
-  infrastructure_subnet_id = module.vnet_cloud.aca_subnet_id
-  deployment_visibility    = var.deployment_visibility
-  tags                     = var.tags
+  source                             = "./modules/aca/env"
+  location                           = var.location
+  resource_group_name                = azurerm_resource_group.rg.name
+  infrastructure_resource_group_name = local.infrastructure_resource_group_name
+  infrastructure_subnet_id           = module.vnet_cloud.aca_subnet_id
+  deployment_visibility              = var.deployment_visibility
+  tags                               = var.tags
 }
 
 module "aca_private_dns" {
@@ -146,12 +152,4 @@ module "acr_aca" {
   location            = var.location
   prefix              = var.prefix
 
-}
-
-module "role_assign_acr" {
-  source                     = "./modules/role-assign/acr"
-  resource_group_name        = azurerm_resource_group.rg.name
-  location                   = var.location
-  user_identity_principal_id = module.identity.id
-  acr_id                     = module.acr_aca.acr_id
 }

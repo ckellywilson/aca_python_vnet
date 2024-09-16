@@ -26,3 +26,13 @@ output "id" {
   description = "The ID of the user assigned identity."
   value       = azurerm_user_assigned_identity.user_managed_identity.id
 }
+
+output "client_id" {
+  description = "The Client ID of the user assigned identity."
+  value       = azurerm_user_assigned_identity.user_managed_identity.client_id
+}
+
+output "principal_id" {
+  description = "The Principal ID of the user assigned identity."
+  value       = azurerm_user_assigned_identity.user_managed_identity.principal_id
+}

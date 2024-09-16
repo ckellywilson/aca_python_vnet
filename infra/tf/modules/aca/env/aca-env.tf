@@ -8,6 +8,11 @@ variable "resource_group_name" {
   type        = string
 }
 
+variable "infrastructure_resource_group_name" {
+  description = "The name of the resource group where the infrastructure resources are located"
+  type        = string
+}
+
 variable "infrastructure_subnet_id" {
   description = "The ID of the subnet where the resources will be created"
   type        = string
@@ -35,13 +40,14 @@ resource "azurerm_log_analytics_workspace" "aca_log_analytics" {
 }
 
 resource "azurerm_container_app_environment" "aca_env" {
-  name                           = "aca-environment"
-  resource_group_name            = var.resource_group_name
-  location                       = var.location
-  infrastructure_subnet_id       = var.infrastructure_subnet_id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.aca_log_analytics.id
-  internal_load_balancer_enabled = var.deployment_visibility == "Private" ? true : false
-  tags                           = var.tags
+  name                               = "aca-environment"
+  resource_group_name                = var.resource_group_name
+  location                           = var.location
+  infrastructure_subnet_id           = var.infrastructure_subnet_id
+  log_analytics_workspace_id         = azurerm_log_analytics_workspace.aca_log_analytics.id
+  internal_load_balancer_enabled     = var.deployment_visibility == "Private" ? true : false
+  infrastructure_resource_group_name = var.infrastructure_resource_group_name
+  tags                               = var.tags
 
   workload_profile {
     name                  = "Consumption"
