@@ -90,16 +90,6 @@ module "vnet_peering" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-module "vm_cloud" {
-  source              = "./modules/vm/cloud"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  vm_admin_username   = var.vm_admin_username
-  nic_id              = module.vnet_cloud.nic_id
-  ssh_key             = module.ssh.ssh_public_key
-  tags                = var.tags
-}
-
 module "vm_onprem" {
   source              = "./modules/vm/onprem"
   location            = var.location
@@ -151,5 +141,12 @@ module "acr_aca" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   prefix              = var.prefix
+}
 
+module "role_assign_acr" {
+  source              = "./modules/role-assign/acr"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.location
+  principal_id        = module.identity.principal_id
+  acr_id              = module.acr_aca.acr_id
 }
