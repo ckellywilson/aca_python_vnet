@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: "ipod"
+      MYSQL_USER: "ipoduser"
+      MYSQL_PASSWORD: "ipodpassword"
+      MYSQL_ROOT_PASSWORD: "ipodadminpassword"
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  web:
+    build:
+      context: .
+    command: sh -c "./wait-for-it.sh db:3306 -- configure-cups.sh && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./wait-for-it.sh:/app/wait-for-it.sh
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      MYSQL_DATABASE: "ipod"
+      MYSQL_USER: "ipoduser"
+      MYSQL_PASSWORD: "ipodpassword"
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+    platform: linux/amd64
+
+volumes:
+  db_data:

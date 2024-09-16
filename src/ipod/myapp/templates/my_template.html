@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data from MySQL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        /* Print-specific styles */
+        @media print {
+            .container {
+                max-width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .logo, form, button {
+                display: none;
+            }
+            ul {
+                padding: 0;
+            }
+            li {
+                background: none;
+                border: 1px solid #000;
+                margin: 0;
+                padding: 5px;
+                border-radius: 0;
+            }
+            .print-only {
+                display: block;
+            }
+        }
+        /* Hide the print-only image by default */
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">IPOD</div>
+        <h1>Data from MySQL</h1>
+        <ul>
+            {% for item in data %}
+                <li>{{ item.created_at }}: {{ item.name }} - {{ item.description }}</li>
+            {% endfor %}
+        </ul>
+        <form action="{% url 'print_view' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Print this page</button>
+        </form>
+        <button onclick="window.print()">Print View</button>
+        <!-- Image that is only visible when printed -->
+        <img src="https://cdn.britannica.com/79/146179-050-A9E577B7/iPod-2001.jpg" alt="Print Image" class="print-only">
+    </div>
+</body>
+</html>
