@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3-slim
+FROM python:3.12.6-slim-bookworm
 
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -10,9 +10,6 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
-
-# COPY SSH keys
-COPY /home/vscode/.ssh/id_rsa /home/vscode/.ssh/id_rsa
 
 WORKDIR /app
 COPY . /app

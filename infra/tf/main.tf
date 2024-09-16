@@ -133,16 +133,6 @@ module "aca_private_dns" {
   tags                   = var.tags
 }
 
-module "aca_py_sample" {
-  source                       = "./modules/aca/py-sample"
-  resource_group_name          = azurerm_resource_group.rg.name
-  container_app_environment_id = module.aca_env.aca_env_id
-  user_managed_id              = module.identity.id
-  acr_login_server             = module.acr_aca.acr_login_server
-  py_sample_image              = var.py_sample_image
-  tags                         = var.tags
-}
-
 module "acr_aca" {
   source              = "./modules/acr"
   resource_group_name = azurerm_resource_group.rg.name
@@ -157,3 +147,41 @@ module "role_assign_acr" {
   principal_id        = module.identity.principal_id
   acr_id              = module.acr_aca.acr_id
 }
+
+# module "aca_py_sample" {
+#   source                       = "./modules/aca/py-sample"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   container_app_environment_id = module.aca_env.aca_env_id
+#   user_managed_id              = module.identity.id
+#   acr_login_server             = module.acr_aca.acr_login_server
+#   py_sample_image              = var.py_sample_image
+#   tags                         = var.tags
+# }
+
+module "mysql_ipod" {
+  source              = "./modules/mysql"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  admin_password      = "ipodadminP@ssw0rd123!"
+}
+
+module "aca_app_ipod" {
+  source                         = "./modules/aca/app-ipod"
+  resource_group_name            = azurerm_resource_group.rg.name
+  container_app_environment_id   = module.aca_env.aca_env_id
+  user_managed_id                = module.identity.id
+  acr_login_server               = module.acr_aca.acr_login_server
+  ipod_db_connection_string      = ""
+  ipod_db_connection_string_name = "ipod-db-connection-string"
+  mysql_host                     = module.mysql_ipod.ip_address
+  tags                           = var.tags
+}
+
+# module "aca_app_ipod_cron" {
+#   source                       = "./modules/aca/app-ipod-cron"
+#   resource_group_name          = azurerm_resource_group.rg.name
+#   container_app_environment_id = module.aca_env.aca_env_id
+#   user_managed_id              = module.identity.id
+#   acr_login_server             = module.acr_aca.acr_login_server
+#   tags                         = var.tags
+# }
