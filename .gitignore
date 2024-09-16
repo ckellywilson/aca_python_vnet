@@ -15,3 +15,6 @@
 **/*.egg-info/
 **/dist/
 **/build/
+
+# Ignore pyenv files
+**/.venv
