@@ -13,6 +13,11 @@ variable "subscription_id" {
   type        = string
 }
 
+variable "tenant_id" {
+  description = "Azure tenant ID"
+  type        = string
+}
+
 variable "vm_admin_username" {
   description = "Username for the VM"
   type        = string
@@ -21,6 +26,16 @@ variable "vm_admin_username" {
 
 variable "ssh_key_file" {
   description = "SSH public key file"
+  type        = string
+}
+
+variable "ssh_private_key_file" {
+  description = "SSH private key file"
+  type        = string
+}
+
+variable "currrent_user_object_id" {
+  description = "User ID"
   type        = string
 }
 
@@ -146,6 +161,18 @@ module "role_assign_acr" {
   location            = var.location
   principal_id        = module.identity.principal_id
   acr_id              = module.acr_aca.acr_id
+}
+
+module "kv_aca" {
+  source                    = "./modules/kv"
+  location                  = var.location
+  resource_group_name       = azurerm_resource_group.rg.name
+  tenant_id                 = var.tenant_id
+  user_managed_principal_id = module.identity.principal_id
+  mysql_root_password       = "rootP@ssw0rd123!"
+  mysql_ipod_password       = "ipodP@ssw0rd123!"
+  ssh_private_key_file      = var.ssh_private_key_file
+  currrent_user_object_id   = var.currrent_user_object_id
 }
 
 module "acr_build_py_sample" {
