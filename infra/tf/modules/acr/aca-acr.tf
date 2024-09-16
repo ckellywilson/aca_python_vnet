@@ -21,3 +21,7 @@ resource "azurerm_container_registry" "acr_registry" {
 output "acr_id" {
   value = azurerm_container_registry.acr_registry.id
 }
+
+output "acr_login_server" {
+  value = azurerm_container_registry.acr_registry.login_server
+}

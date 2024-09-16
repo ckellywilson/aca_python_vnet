@@ -29,6 +29,11 @@ variable "deployment_visibility" {
   type        = string
 }
 
+variable "py_sample_image" {
+  description = "Python sample image"
+  type        = string
+}
+
 variable "tags" {
   description = "Tags for the resources"
   type        = map(string)
@@ -128,11 +133,13 @@ module "aca_private_dns" {
   tags                   = var.tags
 }
 
-module "aca_app_sample" {
-  source                       = "./modules/aca/app-sample"
+module "aca_py_sample" {
+  source                       = "./modules/aca/py-sample"
   resource_group_name          = azurerm_resource_group.rg.name
   container_app_environment_id = module.aca_env.aca_env_id
   user_assigned_principal_id   = module.identity.id
+  acr_login_server             = module.acr_aca.acr_login_server
+  py_sample_image              = var.py_sample_image
   tags                         = var.tags
 }
 
