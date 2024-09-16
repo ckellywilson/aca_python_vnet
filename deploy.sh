@@ -30,16 +30,6 @@ echo "Getting public key..."
 sshKey=$(cat ~/.ssh/id_ed25519.pub)
 echo "sshKey: $sshKey"
 
-# Build py-sample Docker image
-# echo "Building py-sample Docker image..."
-# docker build -t py-sample:latest --platform=linux/amd64 -f src/py-sample/Dockerfile src/py-sample/.
-# echo "py-sample Docker image built successfully."
-
-# Build ipod Docker image
-echo "Building ipod Docker image..."
-docker build -t ipod:latest --platform=linux/amd64 -f src/ipod/Dockerfile src/ipod/.
-echo "ipod Docker image built successfully."
-
 # change to terraform directory
 echo "Changing to infra/tf directory..."
 cd infra/tf
@@ -62,8 +52,8 @@ tags = {
 EOF
 
 # Run Terraform commands using the environment variables
-terraform init
+terraform -chdir="./infra" init
 #terraform plan -var-file=main.tfvars -out=tfplan
 # Run Terraform apply
-terraform apply -var-file=main.tfvars
+terraform -chdir="./infra" apply -var-file=main.tfvars
 
