@@ -8,10 +8,10 @@ services:
       dockerfile: ./Dockerfile
     container_name: ipod-cron-get
     volumes:
-      - ~/.ssh/:/home/vscode/.ssh
+      - ~/.ssh/:/home/vscode/.ssh/
     environment:
-      - SFTP_SSH_KEY_PATH=/home/vscode/.ssh/id-ed25519
-      - SFTP_SERVER=52.171.193.195
+      - SFTP_SSH_KEY_PATH=/home/vscode/.ssh/id_ed25519
+      - SFTP_SERVER=13.84.132.136
       - SFTP_PORT=22
       - SFTP_USERNAME=vscode
       - SFTP_REMOTE_PATH="/home/vscode/upload/"

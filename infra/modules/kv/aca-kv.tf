@@ -133,7 +133,7 @@ resource "azurerm_key_vault_secret" "mysql_ipod_password" {
 }
 
 resource "azurerm_key_vault_secret" "ssh_private_key" {
-  name         = "id-ed25519"
+  name         = "ssh-private-key"
   value        = file(var.ssh_private_key_file)
   key_vault_id = azurerm_key_vault.aca_kv.id
 }

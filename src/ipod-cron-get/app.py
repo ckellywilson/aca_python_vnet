@@ -13,6 +13,7 @@ def print_environment_variables():
 
 
 def validate_environment_variables():
+    print('Validating environment variables...')
     if os.getenv('SFTP_SERVER') is None:
         print('The SFTP_SERVER environment variable is not set!')
         return False

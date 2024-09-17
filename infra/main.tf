@@ -197,6 +197,12 @@ module "mysql_ipod" {
   admin_password      = module.kv_aca.mysql_root_password
 }
 
+# module "vm_onprem_command" {
+#   source   = "./modules/vm/onprem/command"
+#   location = var.location
+#   vm_id    = module.vm_onprem.vm_id
+# }
+
 # module "aca_app_ipod" {
 #   source                         = "./modules/aca/app-ipod"
 #   resource_group_name            = azurerm_resource_group.rg.name
