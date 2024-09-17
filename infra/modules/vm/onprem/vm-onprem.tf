@@ -63,6 +63,17 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 }
 
+# Run the following command to create the "upload" file
+resource "azurerm_virtual_machine_run_command" "upload_directory" {
+  name               = "upload_directory"
+  location           = var.location
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
+
+  source {
+    script = "${file("${path.cwd}/infra/software/vm-onprem/uploadfiles.sh")}"
+  }
+}
+
 output "public_ip" {
   description = "The public IP address of the virtual machine."
   value       = azurerm_linux_virtual_machine.vm.public_ip_address
