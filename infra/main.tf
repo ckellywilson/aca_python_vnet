@@ -169,8 +169,6 @@ module "kv_aca" {
   resource_group_name       = azurerm_resource_group.rg.name
   tenant_id                 = var.tenant_id
   user_managed_principal_id = module.identity.principal_id
-  mysql_root_password       = "rootP@ssw0rd123!"
-  mysql_ipod_password       = "ipodP@ssw0rd123!"
   ssh_private_key_file      = var.ssh_private_key_file
   currrent_user_object_id   = var.currrent_user_object_id
 }
@@ -192,12 +190,12 @@ module "aca_py_sample" {
   tags                         = var.tags
 }
 
-# module "mysql_ipod" {
-#   source              = "./modules/mysql"
-#   location            = var.location
-#   resource_group_name = azurerm_resource_group.rg.name
-#   admin_password      = "ipodadminP@ssw0rd123!"
-# }
+module "mysql_ipod" {
+  source              = "./modules/mysql"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  admin_password      = module.kv_aca.mysql_root_password
+}
 
 # module "aca_app_ipod" {
 #   source                         = "./modules/aca/app-ipod"

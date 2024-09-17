@@ -18,16 +18,14 @@ variable "user_managed_principal_id" {
   description = "value of the user managed identity object id"
 }
 
-variable "mysql_root_password" {
-  type        = string
-  description = "value of the mysql root password"
-  sensitive   = true
+resource "random_string" "mysql_root_password" {
+  length  = 16
+  special = true
 }
 
-variable "mysql_ipod_password" {
-  type        = string
-  description = "value of the mysql ipod password"
-  sensitive   = true
+resource "random_string" "mysql_ipod_password" {
+  length  = 16
+  special = true
 
 }
 
@@ -124,13 +122,13 @@ resource "azurerm_key_vault" "aca_kv" {
 
 resource "azurerm_key_vault_secret" "mysql_root_password" {
   name         = "mysql-root-password"
-  value        = var.mysql_root_password
+  value        = random_string.mysql_root_password.result
   key_vault_id = azurerm_key_vault.aca_kv.id
 }
 
 resource "azurerm_key_vault_secret" "mysql_ipod_password" {
   name         = "mysql-ipod-password"
-  value        = var.mysql_ipod_password
+  value        = random_string.mysql_ipod_password.result
   key_vault_id = azurerm_key_vault.aca_kv.id
 }
 
@@ -138,4 +136,8 @@ resource "azurerm_key_vault_secret" "ssh_private_key" {
   name         = "ssh-private-key"
   value        = file(var.ssh_private_key_file)
   key_vault_id = azurerm_key_vault.aca_kv.id
+}
+
+output "mysql_root_password" {
+  value = azurerm_key_vault_secret.mysql_root_password.value
 }
