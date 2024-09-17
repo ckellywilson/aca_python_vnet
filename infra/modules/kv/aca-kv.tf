@@ -19,13 +19,13 @@ variable "user_managed_principal_id" {
 }
 
 resource "random_string" "mysql_root_password" {
-  length  = 16
-  special = true
+  length  = 24
+  special = false
 }
 
 resource "random_string" "mysql_ipod_password" {
-  length  = 16
-  special = true
+  length  = 24
+  special = false
 
 }
 
