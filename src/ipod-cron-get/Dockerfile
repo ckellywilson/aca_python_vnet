@@ -15,15 +15,13 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /app
 COPY . /app
 
-# create user vscode and grant them full access in the container
-RUN useradd -ms /bin/bash vscode \
+# create user vscode and grant them admin rights in the container
+RUN useradd -ms /bin/bash -G sudo vscode \
+    && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && chown -R vscode:vscode /app
 
 # switch to vscode user
 USER vscode
-
-# create upload directory for vscode user
-RUN mkdir /home/vscode/upload && chown -R vscode:vscode /home/vscode/upload
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["python", "app.py"]
