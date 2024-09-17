@@ -1,14 +1,37 @@
 import os
-import paramiko.ed25519key
+import paramiko
+import time
 
 
 def print_environment_variables():
-    print(f'SFTP_SERVER: {os.getenv("SFTP_SERVER")}')
-    print(f'SFTP_PORT: {os.getenv("SFTP_PORT")}')
-    print(f'SFTP_USERNAME: {os.getenv("SFTP_USERNAME")}')
-    print(f'SFTP_REMOTE_PATH: {os.getenv("SFTP_REMOTE_PATH")}')
-    print(f'SFTP_LOCAL_PATH: {os.getenv("SFTP_LOCAL_PATH")}')
-    print(f'SFTP_SSH_KEY_PATH: {os.getenv("SFTP_SSH_KEY_PATH")}')
+    print('SFTP_SERVER:', os.getenv('SFTP_SERVER'))
+    print('SFTP_PORT:', os.getenv('SFTP_PORT'))
+    print('SFTP_USERNAME:', os.getenv('SFTP_USERNAME'))
+    print('SFTP_REMOTE_PATH:', os.getenv('SFTP_REMOTE_PATH'))
+    print('SFTP_LOCAL_PATH:', os.getenv('SFTP_LOCAL_PATH'))
+    print('SFTP_SSH_KEY_PATH:', os.getenv('SFTP_SSH_KEY_PATH'))
+
+
+def validate_environment_variables():
+    if os.getenv('SFTP_SERVER') is None:
+        print('The SFTP_SERVER environment variable is not set!')
+        return False
+    if os.getenv('SFTP_PORT') is None:
+        print('The SFTP_PORT environment variable is not set!')
+        return False
+    if os.getenv('SFTP_USERNAME') is None:
+        print('The SFTP_USERNAME environment variable is not set!')
+        return False
+    if os.getenv('SFTP_REMOTE_PATH') is None:
+        print('The SFTP_REMOTE_PATH environment variable is not set!')
+        return False
+    if os.getenv('SFTP_LOCAL_PATH') is None:
+        print('The SFTP_LOCAL_PATH environment variable is not set or the folder does not exist!')
+        return False
+    if os.getenv('SFTP_SSH_KEY_PATH') is None or not os.path.exists(os.getenv('SFTP_SSH_KEY_PATH')):
+        print('The SFTP_SSH_KEY_PATH environment variable is not set or the file does not exist!')
+        return False
+    return True
 
 
 def connect_to_sftp(hostname, port, username, ssh_key_path):
@@ -40,10 +63,9 @@ def disconnect_from_sftp(ssh_client, sftp_client):
 
 def download_files(sftp_client, remote_path, local_path):
     try:
-        for file_attr in sftp_client.listdir_attr(remote_path):
-            file_name = file_attr.filename
-            remote_file_path = os.path.join(remote_path, file_name)
+        for file_name in sftp_client.listdir(remote_path):
             local_file_path = os.path.join(local_path, file_name)
+            remote_file_path = os.path.join(remote_path, file_name)
             try:
                 sftp_client.get(remote_file_path, local_file_path)
                 print(f"File '{file_name}' downloaded successfully!")
@@ -56,6 +78,11 @@ def download_files(sftp_client, remote_path, local_path):
 
 def main():
     print_environment_variables()
+
+    if not validate_environment_variables():
+        print('Validation failed')
+        return -1
+
     ssh_client, sftp_client = connect_to_sftp(
         os.getenv('SFTP_SERVER'),
         os.getenv('SFTP_PORT'),
@@ -68,4 +95,6 @@ def main():
             'SFTP_REMOTE_PATH'), os.getenv('SFTP_LOCAL_PATH'))
         disconnect_from_sftp(ssh_client, sftp_client)
 
-main()
+
+if __name__ == '__main__':
+    main()
