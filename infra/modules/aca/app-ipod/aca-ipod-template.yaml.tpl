@@ -4,7 +4,7 @@ properties:
     ingress:
       additionalPortMappings:
       - exposedPort: 631
-        external: false
+        external: true
         targetPort: 631
       allowInsecure: false
       external: true
