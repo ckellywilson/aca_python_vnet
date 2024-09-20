@@ -53,7 +53,6 @@ ssh_key_file = "~/.ssh/id_ed25519.pub"
 ssh_private_key_file = "~/.ssh/id_ed25519"
 currrent_user_object_id = "$currrent_user_object_id"
 deployment_visibility = "Public" # "Public" or "Private"
-py_sample_image = "py-sample:latest"
 tags = {
   environment = "dev"
   owner       = "rheem"

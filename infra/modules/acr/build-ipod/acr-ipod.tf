@@ -13,8 +13,8 @@ variable "acr_password" {
 }
 
 locals {
-  image_tag  = "latest"
-  image_name = "py-sample"
+  image_tag  = formatdate("YYYYMMDD-HHmmss", timestamp())
+  image_name = "ipod"
 }
 
 terraform {
@@ -36,18 +36,18 @@ provider "docker" {
   }
 }
 
-resource "docker_image" "py_sample" {
+resource "docker_image" "ipod" {
   name = "${var.acr_domain_server}/${local.image_name}:${local.image_tag}"
   build {
-    context    = "${path.cwd}/../src/py-sample"
+    context    = "${path.cwd}/../src/ipod"
   }
 }
 
-resource "docker_registry_image" "push_py_sample" {
-  name          = docker_image.py_sample.name
+resource "docker_registry_image" "push_ipod" {
+  name          = docker_image.ipod.name
   keep_remotely = false
 }
 
 output "image_name" {
-  value = docker_image.py_sample.name
+  value = docker_image.ipod.name
 }

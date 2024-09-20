@@ -71,8 +71,7 @@ def download_files(sftp_client, remote_path, local_path):
                 sftp_client.get(remote_file_path, local_file_path)
                 print(f"File '{file_name}' downloaded successfully!")
             except Exception as e:
-                print(f"An error occurred while downloading '{
-                      file_name}': {e}")
+                print(f"An error occurred while downloading '{file_name}': {e}")
     except Exception as e:
         print(f'An error occurred: {e}')
 

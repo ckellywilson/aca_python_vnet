@@ -12,10 +12,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv()
+
+IS_PRODUCTION = os.environ.get('DJANGO_PRODUCTION', 'False') == 'True'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,7 +31,7 @@ SECRET_KEY = "django-insecure-@hm9akbs^u4@kll#l#&(jwkcah$ogj_k06d-m_!581$u&a=a4(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -86,6 +91,12 @@ DATABASES = {
         'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'ipodpassword'),
         'HOST': os.environ.get('MYSQL_HOST', '127.0.0.1'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
+        'OPTIONS': {
+            'ssl_mode': 'PREFERRED',
+            'ssl': {
+                'ca': os.environ.get('MYSQL_SSL_CA', 'DigiCertGlobalRootCA.crt.pem'),
+            }
+        } if IS_PRODUCTION else {}
     }
 }
 

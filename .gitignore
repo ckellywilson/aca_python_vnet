@@ -18,3 +18,5 @@
 
 # Ignore pyenv files
 **/.venv
+tfplan
+.env

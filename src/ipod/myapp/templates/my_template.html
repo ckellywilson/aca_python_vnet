@@ -71,11 +71,8 @@
         </ul>
         <form action="{% url 'print_view' %}" method="post">
             {% csrf_token %}
-            <button type="submit">Print this page</button>
+            <button type="submit">Print this page in CUPS</button>
         </form>
-        <button onclick="window.print()">Print View</button>
-        <!-- Image that is only visible when printed -->
-        <img src="https://cdn.britannica.com/79/146179-050-A9E577B7/iPod-2001.jpg" alt="Print Image" class="print-only">
     </div>
 </body>
 </html>

@@ -42,7 +42,7 @@ resource "azurerm_container_app" "py-sample" {
   template {
     container {
       name   = "py-sample"
-      image  = "acaacrrheem.azurecr.io/py-sample:latest"
+      image  = var.py_sample_image
       cpu    = 0.25
       memory = "0.5Gi"
     }

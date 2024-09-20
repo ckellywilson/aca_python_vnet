@@ -44,11 +44,6 @@ variable "deployment_visibility" {
   type        = string
 }
 
-variable "py_sample_image" {
-  description = "Python sample image"
-  type        = string
-}
-
 variable "tags" {
   description = "Tags for the resources"
   type        = map(string)
@@ -64,6 +59,10 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "~>4.1.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~>3.6.3"
     }
   }
 }
@@ -173,8 +172,16 @@ module "kv_aca" {
   currrent_user_object_id   = var.currrent_user_object_id
 }
 
+# this builds the docker image
 module "acr_build_py_sample" {
   source            = "./modules/acr/build-py-sample"
+  acr_domain_server = module.acr_aca.acr_login_server
+  acr_username      = module.acr_aca.acr_username
+  acr_password      = module.acr_aca.acr_password
+}
+
+module "acr_build_ipod" {
+  source            = "./modules/acr/build-ipod"
   acr_domain_server = module.acr_aca.acr_login_server
   acr_username      = module.acr_aca.acr_username
   acr_password      = module.acr_aca.acr_password
@@ -186,8 +193,10 @@ module "aca_py_sample" {
   container_app_environment_id = module.aca_env.aca_env_id
   user_managed_id              = module.identity.id
   acr_login_server             = module.acr_aca.acr_login_server
-  py_sample_image              = var.py_sample_image
+  py_sample_image              = module.acr_build_py_sample.image_name
   tags                         = var.tags
+
+  depends_on = [module.acr_build_ipod]
 }
 
 module "mysql_ipod" {
@@ -203,17 +212,22 @@ module "mysql_ipod" {
 #   vm_id    = module.vm_onprem.vm_id
 # }
 
-# module "aca_app_ipod" {
-#   source                         = "./modules/aca/app-ipod"
-#   resource_group_name            = azurerm_resource_group.rg.name
-#   container_app_environment_id   = module.aca_env.aca_env_id
-#   user_managed_id                = module.identity.id
-#   acr_login_server               = module.acr_aca.acr_login_server
-#   ipod_db_connection_string      = ""
-#   ipod_db_connection_string_name = "ipod-db-connection-string"
-#   mysql_host                     = module.mysql_ipod.ip_address
-#   tags                           = var.tags
-# }
+module "aca_app_ipod" {
+  source                         = "./modules/aca/app-ipod"
+  resource_group_name            = azurerm_resource_group.rg.name
+  container_app_environment_id   = module.aca_env.aca_env_id
+  user_managed_id                = module.identity.id
+  acr_login_server               = module.acr_aca.acr_login_server
+  ipod_db_connection_string      = ""
+  ipod_db_connection_string_name = "ipod-db-connection-string"
+  mysql_host                     = module.mysql_ipod.ip_address
+  mysql_password                 = module.kv_aca.mysql_root_password
+  appinsights_connection_string  = ""
+  ipod_image                     = module.acr_build_ipod.image_name
+  tags                           = var.tags
+
+  depends_on = [module.acr_build_ipod]
+}
 
 # module "aca_app_ipod_cron" {
 #   source                       = "./modules/aca/app-ipod-cron"

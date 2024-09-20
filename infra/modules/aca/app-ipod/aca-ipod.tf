@@ -8,7 +8,10 @@ variable "container_app_environment_id" {
 
 variable "acr_login_server" {
   type = string
+}
 
+variable "ipod_image" {
+  type = string
 }
 
 variable "user_managed_id" {
@@ -29,13 +32,28 @@ variable "mysql_host" {
   type = string
 }
 
+variable "mysql_password" {
+  type = string
+  sensitive = true
+}
+
 variable "tags" {
   type    = map(string)
   default = {}
 }
 
-resource "azurerm_container_app" "aca_sample" {
-  name                         = "aca-sample"
+variable "appinsights_connection_string" {
+  type = string
+}
+
+resource "random_string" "secret" {
+  length  = 16
+  special = true
+  upper = true
+}
+
+resource "azurerm_container_app" "aca_ipod" {
+  name                         = "aca-ipod"
   resource_group_name          = var.resource_group_name
   revision_mode                = "Single"
   container_app_environment_id = var.container_app_environment_id
@@ -48,12 +66,13 @@ resource "azurerm_container_app" "aca_sample" {
       latest_revision = true
     }
     external_enabled = true
+
   }
 
   template {
     container {
-      name   = "quickstart"
-      image  = "mcr.microsoft.com/k8se/quickstart:latest"
+      name   = "ipod"
+      image  = var.ipod_image
       cpu    = 0.25
       memory = "0.5Gi"
 
@@ -67,17 +86,47 @@ resource "azurerm_container_app" "aca_sample" {
       }
       env {
         name  = "MYSQL_PASSWORD"
-        value = "ipodpassword"
+        secret_name = "mysql-password"
       }
       env {
         name  = "MYSQL_HOST"
         value = var.mysql_host
       }
       env {
+        name  = "MYSQL_SSL_CAMYSQL_SSL_CA"
+        value = "/app/DigiCertGlobalRootCA.crt.pem"
+      }
+      env {
+        name  = "DJANGO_PRODUCTION"
+        value = "True"
+      }
+      env {
+        name  = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        value = var.appinsights_connection_string
+      }
+      env {
+        secret_name = "secret-key"
+        name = "SECRET_KEY"
+      }
+      env {
+        name  = "ALLOWED_HOSTS"
+        value = "*"
+      }
+      env {
         name  = "MYSQL_PORT"
         value = "3306"
       }
     }
+  }
+
+  secret {
+    name  = "secret-key"
+    value = random_string.secret.result
+  }
+
+  secret {
+    name = "mysql-password"
+    value = var.mysql_password
   }
 
   identity {

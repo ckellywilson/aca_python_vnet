@@ -1,3 +1,9 @@
+resource "random_string" "prefix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 variable "location" {
   type    = string
   default = "eastus"
@@ -19,7 +25,7 @@ variable "tags" {
 }
 
 resource "azurerm_mysql_flexible_server" "ipod_mysql" {
-  name                   = "ipod-mysql"
+  name                   = "${random_string.prefix.result}-ipod-mysql"
   location               = var.location
   resource_group_name    = var.resource_group_name
   administrator_login    = "ipodadmin"

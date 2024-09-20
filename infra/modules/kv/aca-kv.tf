@@ -141,3 +141,7 @@ resource "azurerm_key_vault_secret" "ssh_private_key" {
 output "mysql_root_password" {
   value = azurerm_key_vault_secret.mysql_root_password.value
 }
+
+output "mysql_ipod_password_secret_id" {
+  value = azurerm_key_vault_secret.mysql_root_password.id
+}

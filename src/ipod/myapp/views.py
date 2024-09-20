@@ -44,10 +44,11 @@ def print_view(request):
     start_time = time.time()
     pdf_file_path = None
     while time.time() - start_time <= timeout:
-        pdf_files = [f for f in os.listdir(pdf_output_dir) if f.endswith('.pdf')]
-        if pdf_files:
-            pdf_file_path = os.path.join(pdf_output_dir, pdf_files[0])
-            break
+        if os.path.exists(pdf_output_dir):
+            pdf_files = [f for f in os.listdir(pdf_output_dir) if f.endswith('.pdf')]
+            if pdf_files:
+                pdf_file_path = os.path.join(pdf_output_dir, pdf_files[0])
+                break
         time.sleep(1)  # Sleep for 1 second before checking again
 
     # Read the PDF file and return it in the HTTP response
