@@ -37,6 +37,24 @@ resource "azurerm_mysql_flexible_server" "ipod_mysql" {
   tags = var.tags
 }
 
+resource "azurerm_mysql_flexible_database" "ipod_db" {
+  name                = "ipod_db"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.ipod_mysql.name
+  charset             = "utf8"
+  collation           = "utf8_unicode_ci"
+}
+
+# this should allow connections from Azure services
+resource "azurerm_mysql_flexible_server_firewall_rule" "allow_azure_services" {
+  name                = "AllowAzureServices"
+  resource_group_name = azurerm_mysql_flexible_server.ipod_mysql.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.ipod_mysql.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
+
 output "name" {
   value = azurerm_mysql_flexible_server.ipod_mysql.name
 }

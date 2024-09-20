@@ -78,11 +78,11 @@ resource "azurerm_container_app" "aca_ipod" {
 
       env {
         name  = "MYSQL_DATABASE"
-        value = "ipod"
+        value = "ipod_db"
       }
       env {
         name  = "MYSQL_USER"
-        value = "ipuser"
+        value = "ipodadmin"
       }
       env {
         name  = "MYSQL_PASSWORD"

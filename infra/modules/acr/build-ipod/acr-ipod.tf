@@ -13,7 +13,7 @@ variable "acr_password" {
 }
 
 locals {
-  image_tag  = formatdate("YYYYMMDD-HHmmss", timestamp())
+  image_tag  = "latest"
   image_name = "ipod"
 }
 
@@ -49,5 +49,5 @@ resource "docker_registry_image" "push_ipod" {
 }
 
 output "image_name" {
-  value = docker_image.ipod.name
+  value = docker_image.ipod.image_id
 }
