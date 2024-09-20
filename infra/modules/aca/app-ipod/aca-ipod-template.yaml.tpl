@@ -31,7 +31,7 @@ properties:
           secretRef: mysql-password
         - name: MYSQL_HOST
           value : ${mysql_host}
-        - name: MYSQL_SSL_CAMYSQL_SSL_CA
+        - name: MYSQL_SSL_CA
           value : /app/DigiCertGlobalRootCA.crt.pem
         - name: DJANGO_PRODUCTION
           value : True

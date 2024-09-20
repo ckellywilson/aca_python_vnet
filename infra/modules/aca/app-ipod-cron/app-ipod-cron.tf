@@ -71,7 +71,7 @@ resource "azurerm_container_app_job" "aca_mysql_job" {
         value = var.mysql_host
       }
       env {
-        name  = "MYSQL_SSL_CAMYSQL_SSL_CA"
+        name  = "MYSQL_SSL_CA"
         value = "/app/DigiCertGlobalRootCA.crt.pem"
       }
       env {

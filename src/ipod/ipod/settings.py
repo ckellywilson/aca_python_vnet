@@ -94,7 +94,7 @@ DATABASES = {
         'OPTIONS': {
             'ssl_mode': 'PREFERRED',
             'ssl': {
-                'ca': os.environ.get('MYSQL_SSL_CA', 'DigiCertGlobalRootCA.crt.pem'),
+                'ca': os.environ.get('MYSQL_SSL_CA'),
             }
         } if IS_PRODUCTION else {}
     }
