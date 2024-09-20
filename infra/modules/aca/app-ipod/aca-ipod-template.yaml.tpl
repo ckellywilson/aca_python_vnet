@@ -3,7 +3,9 @@ properties:
     activeRevisionsMode: Single
     ingress:
       additionalPortMappings:
+      # for some reason - this is not working
       - exposedPort: 631
+      # port should be internal
         external: true
         targetPort: 631
       allowInsecure: false
