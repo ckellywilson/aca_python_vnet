@@ -9,12 +9,18 @@ variable "acr_username" {
 
 variable "acr_password" {
   description = "The password for the Azure Container Registry"
+}
 
+variable "image_name" {
+  description = "The name of the image to build"
+}
+
+variable "docker_path" {
+  description = "The path to the Dockerfile"
 }
 
 locals {
-  image_tag  = "latest"
-  image_name = "py-sample"
+  image_tag  = formatdate("YYYYMMDD-HHmmss", timestamp())
 }
 
 terraform {
@@ -36,18 +42,25 @@ provider "docker" {
   }
 }
 
-resource "docker_image" "py_sample" {
-  name = "${var.acr_domain_server}/${local.image_name}:${local.image_tag}"
+resource "docker_image" "image" {
+  name = "${var.acr_domain_server}/${var.image_name}:${local.image_tag}"
+
   build {
-    context    = "${path.cwd}/../src/py-sample"
+    context    = "${path.cwd}${var.docker_path}"
+    labels = {
+      "Author" = "PKA"
+    }
   }
+  # triggers = {
+  #   dir_sha1 = sha1(join("", [for f in fileset(path.module, "${path.cwd}${var.docker_path}/*") : filesha1(f)]))
+  # }
 }
 
-resource "docker_registry_image" "push_py_sample" {
-  name          = docker_image.py_sample.name
+resource "docker_registry_image" "push_image" {
+  name          = docker_image.image.name
   keep_remotely = false
 }
 
 output "image_name" {
-  value = docker_image.py_sample.name
+  value = docker_image.image.name
 }

@@ -41,8 +41,8 @@ resource "azurerm_mysql_flexible_database" "ipod_db" {
   name                = "ipod_db"
   resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_flexible_server.ipod_mysql.name
-  charset             = "utf8"
-  collation           = "utf8_unicode_ci"
+  charset             = "utf8mb3"
+  collation           = "utf8mb3_unicode_ci"
 }
 
 # this should allow connections from Azure services

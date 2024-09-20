@@ -20,3 +20,4 @@
 **/.venv
 tfplan
 .env
+infra/modules/aca/app-ipod/aca-ipod.yaml

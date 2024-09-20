@@ -1,9 +1,8 @@
-variable "location" {
-  type    = string
-  default = "eastus"
+variable "resource_group_name" {
+  type = string
 }
 
-variable "resource_group_name" {
+variable "location" {
   type = string
 }
 
@@ -24,23 +23,67 @@ variable "tags" {
   type = map(string)
 }
 
-resource "azurerm_container_app_job" "aca_print_job" {
-  name                         = "aca-print-job"
-  resource_group_name          = var.resource_group_name
+variable "mysql_host" {
+  type = string
+}
+
+variable "mysql_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "image_name" {
+  type = string
+}
+
+resource "azurerm_container_app_job" "aca_mysql_job" {
+  name                         = "aca-mysql-job"
   location                     = var.location
+  resource_group_name          = var.resource_group_name
   container_app_environment_id = var.container_app_environment_id
   replica_timeout_in_seconds   = 1800
 
-  manual_trigger_config {
+  schedule_trigger_config {
+    cron_expression = "0 * * * *"
   }
 
   template {
     container {
-      name   = "print-job"
-      image  = "mcr.microsoft.com/k8se/quickstart-jobs:latest"
+      name   = "sql-job"
+      image  = var.image_name
       cpu    = 0.25
       memory = "0.5Gi"
+
+      env {
+        name  = "MYSQL_DATABASE"
+        value = "ipod_db"
+      }
+      env {
+        name  = "MYSQL_USER"
+        value = "ipodadmin"
+      }
+      env {
+        name        = "MYSQL_PASSWORD"
+        secret_name = "mysql-password"
+      }
+      env {
+        name  = "MYSQL_HOST"
+        value = var.mysql_host
+      }
+      env {
+        name  = "MYSQL_SSL_CAMYSQL_SSL_CA"
+        value = "/app/DigiCertGlobalRootCA.crt.pem"
+      }
+      env {
+        name  = "MYSQL_PORT"
+        value = "3306"
+      }
     }
+  }
+
+  secret {
+    name  = "mysql-password"
+    value = var.mysql_password
   }
 
   identity {

@@ -174,17 +174,39 @@ module "kv_aca" {
 
 # this builds the docker image
 module "acr_build_py_sample" {
-  source            = "./modules/acr/build-py-sample"
+  source            = "./modules/acr/build-image"
   acr_domain_server = module.acr_aca.acr_login_server
   acr_username      = module.acr_aca.acr_username
   acr_password      = module.acr_aca.acr_password
+  docker_path       = "/../src/py-sample"
+  image_name        = "py-sample"
 }
 
 module "acr_build_ipod" {
-  source            = "./modules/acr/build-ipod"
+  source            = "./modules/acr/build-image"
   acr_domain_server = module.acr_aca.acr_login_server
   acr_username      = module.acr_aca.acr_username
   acr_password      = module.acr_aca.acr_password
+  image_name        = "ipod"
+  docker_path       = "/../src/ipod"
+}
+
+module "acr_build_ipod_mysql_job" {
+  source            = "./modules/acr/build-image"
+  acr_domain_server = module.acr_aca.acr_login_server
+  acr_username      = module.acr_aca.acr_username
+  acr_password      = module.acr_aca.acr_password
+  image_name        = "ipod-mysql-job"
+  docker_path       = "/../src/mysql-job"
+}
+
+module "acr_build_ipod_cups_proxy" {
+  source            = "./modules/acr/build-image"
+  acr_domain_server = module.acr_aca.acr_login_server
+  acr_username      = module.acr_aca.acr_username
+  acr_password      = module.acr_aca.acr_password
+  image_name        = "ipod-cups-proxy"
+  docker_path       = "/../src/cups-proxy"
 }
 
 module "aca_py_sample" {
@@ -213,27 +235,43 @@ module "mysql_ipod" {
 # }
 
 module "aca_app_ipod" {
-  source                         = "./modules/aca/app-ipod"
-  resource_group_name            = azurerm_resource_group.rg.name
-  container_app_environment_id   = module.aca_env.aca_env_id
-  user_managed_id                = module.identity.id
-  acr_login_server               = module.acr_aca.acr_login_server
-  ipod_db_connection_string      = ""
-  ipod_db_connection_string_name = "ipod-db-connection-string"
-  mysql_host                     = module.mysql_ipod.ip_address
-  mysql_password                 = module.kv_aca.mysql_root_password
-  appinsights_connection_string  = ""
-  ipod_image                     = module.acr_build_ipod.image_name
-  tags                           = var.tags
+  source                        = "./modules/aca/app-ipod"
+  resource_group_name           = azurerm_resource_group.rg.name
+  container_app_environment_id  = module.aca_env.aca_env_id
+  user_managed_id               = module.identity.id
+  acr_login_server              = module.acr_aca.acr_login_server
+  mysql_host                    = module.mysql_ipod.ip_address
+  mysql_password                = module.kv_aca.mysql_root_password
+  appinsights_connection_string = ""
+  image_name                    = module.acr_build_ipod.image_name
+  tags                          = var.tags
 
   depends_on = [module.acr_build_ipod]
 }
 
-# module "aca_app_ipod_cron" {
-#   source                       = "./modules/aca/app-ipod-cron"
-#   resource_group_name          = azurerm_resource_group.rg.name
-#   container_app_environment_id = module.aca_env.aca_env_id
-#   user_managed_id              = module.identity.id
-#   acr_login_server             = module.acr_aca.acr_login_server
-#   tags                         = var.tags
-# }
+module "aca_app_ipod_cups_proxy" {
+  source                       = "./modules/aca/app-ipod-cups-proxy"
+  resource_group_name          = azurerm_resource_group.rg.name
+  container_app_environment_id = module.aca_env.aca_env_id
+  user_managed_id              = module.identity.id
+  acr_login_server             = module.acr_aca.acr_login_server
+  image_name                   = module.acr_build_ipod_cups_proxy.image_name
+  tags                         = var.tags
+  ipod_app_name                = module.aca_app_ipod.aca_app_name
+  depends_on                   = [module.aca_app_ipod]
+}
+
+module "aca_app_ipod_cron" {
+  source                       = "./modules/aca/app-ipod-cron"
+  resource_group_name          = azurerm_resource_group.rg.name
+  container_app_environment_id = module.aca_env.aca_env_id
+  user_managed_id              = module.identity.id
+  acr_login_server             = module.acr_aca.acr_login_server
+  mysql_host                   = module.mysql_ipod.ip_address
+  mysql_password               = module.kv_aca.mysql_root_password
+  image_name                   = module.acr_build_ipod_mysql_job.image_name
+  tags                         = var.tags
+  location                     = var.location
+
+  depends_on = [module.acr_build_ipod_mysql_job]
+}

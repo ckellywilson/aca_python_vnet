@@ -10,22 +10,12 @@ variable "acr_login_server" {
   type = string
 }
 
-variable "ipod_image" {
+variable "image_name" {
   type = string
 }
 
 variable "user_managed_id" {
   type = string
-}
-
-variable "ipod_db_connection_string" {
-  type        = string
-  description = "value"
-}
-
-variable "ipod_db_connection_string_name" {
-  type        = string
-  description = "value"
 }
 
 variable "mysql_host" {
@@ -72,7 +62,7 @@ resource "azurerm_container_app" "aca_ipod" {
   template {
     container {
       name   = "ipod"
-      image  = var.ipod_image
+      image  = var.image_name
       cpu    = 0.25
       memory = "0.5Gi"
 
@@ -140,4 +130,37 @@ resource "azurerm_container_app" "aca_ipod" {
     server   = var.acr_login_server
     identity = var.user_managed_id
   }
+}
+
+# https://learn.microsoft.com/en-gb/azure/container-apps/ingress-how-to?pivots=azure-cli#use-additional-tcp-ports
+
+locals {
+  yaml_content = templatefile("${path.module}/aca-ipod-template.yaml.tpl", {
+    image_name     = var.image_name
+    mysql_host     = var.mysql_host
+  })
+}
+
+resource "local_file" "aca_ipod_yaml" {
+  content  = local.yaml_content
+  filename = "${path.module}/aca-ipod.yaml"
+}
+
+resource "null_resource" "configure_ingress" {
+  provisioner "local-exec" {
+    command = <<EOT
+      az containerapp update \
+        --name ${azurerm_container_app.aca_ipod.name} \
+        --resource-group ${var.resource_group_name} \
+        --yaml ${path.module}/aca-ipod.yaml
+    EOT
+  }
+
+  depends_on = [
+    azurerm_container_app.aca_ipod
+  ]
+}
+
+output "aca_app_name" {
+  value = azurerm_container_app.aca_ipod.name
 }
