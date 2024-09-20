@@ -20,6 +20,7 @@ RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container
 COPY app.py app.py
+COPY DigiCertGlobalRootCA.crt.pem DigiCertGlobalRootCA.crt.pem
 
 # Set the entry point for the container
 CMD ["python", "app.py"]
