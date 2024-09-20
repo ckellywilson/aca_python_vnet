@@ -22,4 +22,4 @@ RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 COPY app.py app.py
 
 # Set the entry point for the container
-CMD ["python", "src/app.py"]
+CMD ["python", "app.py"]

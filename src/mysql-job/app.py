@@ -43,10 +43,21 @@ user_name = os.environ.get("MYSQL_USER", "my_user")
 user_password = os.environ.get("MYSQL_PASSWORD", "my_password")
 host_name = os.environ.get("MYSQL_HOST", "127.0.0.1")
 db_port = os.environ.get("MYSQL_PORT", "3306")
-ssl_ca = os.environ.get("MYSQL_SSL_CA", "DigiCertGlobalRootCA.crt.pem")
+ssl_ca = os.environ.get("MYSQL_SSL_CA")
 
 # Create a connection to the database
 connection = create_connection(host_name, user_name, user_password, db_name, db_port, ssl_ca)
+
+# this is only used in testing - on the server table already exists
+create_table_query = """
+CREATE TABLE IF NOT EXISTS myapp_mymodel (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+"""
+execute_query(connection, create_table_query, ())
 
 # SQL query to insert a new record
 insert_query = """
