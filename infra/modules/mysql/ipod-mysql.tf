@@ -1,3 +1,9 @@
+resource "random_string" "prefix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 variable "location" {
   type    = string
   default = "eastus"
@@ -19,7 +25,7 @@ variable "tags" {
 }
 
 resource "azurerm_mysql_flexible_server" "ipod_mysql" {
-  name                   = "ipod-mysql"
+  name                   = "${random_string.prefix.result}-ipod-mysql"
   location               = var.location
   resource_group_name    = var.resource_group_name
   administrator_login    = "ipodadmin"
@@ -30,6 +36,24 @@ resource "azurerm_mysql_flexible_server" "ipod_mysql" {
 
   tags = var.tags
 }
+
+resource "azurerm_mysql_flexible_database" "ipod_db" {
+  name                = "ipod_db"
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.ipod_mysql.name
+  charset             = "utf8mb3"
+  collation           = "utf8mb3_unicode_ci"
+}
+
+# this should allow connections from Azure services
+resource "azurerm_mysql_flexible_server_firewall_rule" "allow_azure_services" {
+  name                = "AllowAzureServices"
+  resource_group_name = azurerm_mysql_flexible_server.ipod_mysql.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.ipod_mysql.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
+}
+
 
 output "name" {
   value = azurerm_mysql_flexible_server.ipod_mysql.name

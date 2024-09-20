@@ -1,3 +1,9 @@
+resource "random_string" "prefix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 variable "resource_group_name" {
   type = string
 }
@@ -11,7 +17,7 @@ variable "prefix" {
 }
 
 resource "azurerm_container_registry" "acr_registry" {
-  name                = "acaacr${var.prefix}"
+  name                = "acaacr${var.prefix}${random_string.prefix.result}"
   resource_group_name = var.resource_group_name
   location            = var.location
   sku                 = "Basic"
