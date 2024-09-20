@@ -56,10 +56,13 @@ resource "azurerm_container_app" "aca_ipod" {
       latest_revision = true
     }
     external_enabled = true
-
   }
 
   template {
+
+    min_replicas = 1
+    max_replicas = 3
+
     container {
       name   = "ipod"
       image  = var.image_name
