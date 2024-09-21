@@ -39,3 +39,7 @@ output "acr_username" {
 output "acr_password" {
   value = azurerm_container_registry.acr_registry.admin_password
 }
+
+output "acr_name" {
+  value = azurerm_container_registry.acr_registry.name
+}

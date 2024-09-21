@@ -45,13 +45,13 @@ resource "azurerm_container_app" "aca_ipod_cups_proxy" {
   }
 
   template {
-    
+
     min_replicas = 1
     max_replicas = 3
 
     container {
       name   = "ipod-cups-proxy"
-      image  = var.image_name
+      image  = "${var.acr_login_server}/${var.image_name}"
       cpu    = 0.25
       memory = "0.5Gi"
 

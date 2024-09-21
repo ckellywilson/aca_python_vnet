@@ -50,7 +50,7 @@ resource "azurerm_container_app_job" "aca_mysql_job" {
   template {
     container {
       name   = "sql-job"
-      image  = var.image_name
+      image  = "${var.acr_login_server}/${var.image_name}"
       cpu    = 0.25
       memory = "0.5Gi"
 

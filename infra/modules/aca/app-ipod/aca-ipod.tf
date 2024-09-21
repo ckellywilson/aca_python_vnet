@@ -65,7 +65,7 @@ resource "azurerm_container_app" "aca_ipod" {
 
     container {
       name   = "ipod"
-      image  = var.image_name
+      image  = "${var.acr_login_server}/${var.image_name}"
       cpu    = 0.25
       memory = "0.5Gi"
 

@@ -17,12 +17,12 @@ echo "location: $location"
 # Variables
 # Get subscription ID
 echo "Getting the subscription ID..."
-subscription_id=$(az account show --query "id" --output tsv)
+read -p "Please enter your Azure subscription ID: " subscription_id
 echo "subscription_id: $subscription_id"
 
 # get the tenant ID
 echo "Getting the tenant ID..."
-tenant_id=$(az account show --query "tenantId" --output tsv)
+read -p "Please enter your Azure tenant ID: " tenant_id
 echo "tenant_id: $tenant_id"
 
 # get current user id
@@ -35,11 +35,6 @@ echo "user_id: $currrent_user_object_id"
 echo "Creating rsa ssh key..."
 ssh-keygen -m PEM -t ed25519 -f ~/.ssh/id_ed25519
 echo "SSH key created successfully."
-
-# change to terraform directory
-echo "Changing to infra/tf directory..."
-cd infra/tf
-echo "Current directory: $(pwd)"
 
 # Create a tfvars file
 echo "Creating a tfvars file..."
@@ -59,9 +54,17 @@ tags = {
 }
 EOF
 
+# # change to terraform directory to run init and apply
+echo "Changing to infra/tf directory..."
+cd infra
+echo "Current directory: $(pwd)"
+
 # Run Terraform commands using the environment variables
-terraform -chdir="./infra" init
-#terraform plan -var-file=main.tfvars -out=tfplan
+terraform init
+
+# Run Terraform plan
+# terraform plan -var-file=main.tfvars -out=tfplan
+
 # Run Terraform apply
-terraform -chdir="./infra" apply -var-file=main.tfvars
+terraform apply -var-file=main.tfvars
 
