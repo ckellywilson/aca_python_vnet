@@ -186,6 +186,7 @@ module "mysql_ipod" {
   admin_password      = module.kv_aca.mysql_root_password
 }
 
+################# ACR IMAGES #################
 # builds docker image using acr
 module "acr_null_build_py_sample" {
   source             = "./modules/acr/build-image-acr"
@@ -203,14 +204,6 @@ module "acr_null_build_ipod" {
   dockerfile_context = "/../src/ipod"
 }
 
-module "acr_null_build_ipod_mysql" {
-  source             = "./modules/acr/build-image-acr"
-  acr_name           = module.acr_aca.acr_name
-  image_name         = "ipod-mysql-job"
-  dockerfile_path    = "/../src/mysql-job/Dockerfile"
-  dockerfile_context = "/../src/mysql-job"
-}
-
 module "acr_null_build_ipod_cups_proxy" {
   source             = "./modules/acr/build-image-acr"
   acr_name           = module.acr_aca.acr_name
@@ -219,43 +212,15 @@ module "acr_null_build_ipod_cups_proxy" {
   dockerfile_context = "/../src/cups-proxy"
 }
 
-# this builds the docker image
-# module "acr_build_py_sample" {
-#   source            = "./modules/acr/build-image"
-#   acr_domain_server = module.acr_aca.acr_login_server
-#   acr_username      = module.acr_aca.acr_username
-#   acr_password      = module.acr_aca.acr_password
-#   docker_path       = "/../src/py-sample"
-#   image_name        = "py-sample"
-# }
+module "acr_null_build_mysql_cron" {
+  source             = "./modules/acr/build-image-acr"
+  acr_name           = module.acr_aca.acr_name
+  image_name         = "ipod-mysql-job"
+  dockerfile_path    = "/../src/mysql-job/Dockerfile"
+  dockerfile_context = "/../src/mysql-job"
+}
 
-# module "acr_build_ipod" {
-#   source            = "./modules/acr/build-image"
-#   acr_domain_server = module.acr_aca.acr_login_server
-#   acr_username      = module.acr_aca.acr_username
-#   acr_password      = module.acr_aca.acr_password
-#   image_name        = "ipod"
-#   docker_path       = "/../src/ipod"
-# }
-
-# module "acr_build_ipod_mysql_job" {
-#   source            = "./modules/acr/build-image"
-#   acr_domain_server = module.acr_aca.acr_login_server
-#   acr_username      = module.acr_aca.acr_username
-#   acr_password      = module.acr_aca.acr_password
-#   image_name        = "ipod-mysql-job"
-#   docker_path       = "/../src/mysql-job"
-# }
-
-# module "acr_build_ipod_cups_proxy" {
-#   source            = "./modules/acr/build-image"
-#   acr_domain_server = module.acr_aca.acr_login_server
-#   acr_username      = module.acr_aca.acr_username
-#   acr_password      = module.acr_aca.acr_password
-#   image_name        = "ipod-cups-proxy"
-#   docker_path       = "/../src/cups-proxy"
-# }
-
+################# ACA APPS #################
 # this deploys the app to the container
 module "aca_py_sample" {
   source                       = "./modules/aca/py-sample"
@@ -296,17 +261,17 @@ module "aca_app_ipod_cups_proxy" {
   depends_on                   = [module.aca_app_ipod]
 }
 
-# module "aca_app_ipod_cron" {
-#   source                       = "./modules/aca/app-ipod-cron"
-#   resource_group_name          = azurerm_resource_group.rg.name
-#   container_app_environment_id = module.aca_env.aca_env_id
-#   user_managed_id              = module.identity.id
-#   acr_login_server             = module.acr_aca.acr_login_server
-#   mysql_host                   = module.mysql_ipod.ip_address
-#   mysql_password               = module.kv_aca.mysql_root_password
-#   image_name                   = module.acr_build_ipod_mysql_job.image_name
-#   tags                         = var.tags
-#   location                     = var.location
+module "aca_job_mysql_cron" {
+  source                       = "./modules/aca/job-mysql-cron"
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = var.location
+  container_app_environment_id = module.aca_env.aca_env_id
+  user_managed_id              = module.identity.id
+  acr_login_server             = module.acr_aca.acr_login_server
+  mysql_host                   = module.mysql_ipod.ip_address
+  mysql_password               = module.kv_aca.mysql_root_password
+  image_name                   = module.acr_null_build_mysql_cron.image_name
+  tags                         = var.tags
 
-#   depends_on = [module.acr_build_ipod_mysql_job]
-# }
+  depends_on = [module.acr_null_build_mysql_cron]
+}
