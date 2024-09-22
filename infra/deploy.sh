@@ -54,11 +54,6 @@ tags = {
 }
 EOF
 
-# # change to terraform directory to run init and apply
-echo "Changing to infra/tf directory..."
-cd infra
-echo "Current directory: $(pwd)"
-
 # Run Terraform commands using the environment variables
 terraform init
 

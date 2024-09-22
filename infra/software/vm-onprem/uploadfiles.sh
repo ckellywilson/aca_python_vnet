@@ -1,24 +1,20 @@
 #!/bin/bash
 
-# Create folder for user upload
-mkdir -p /home/vscode/upload
+# Define the directory and file path
+DIR="/home/vscode/upload"
+FILE="$DIR/data.csv"
 
-# Create and populate CSV files
-for i in {1..3}; do
+# Check if the directory exists, if not, create it
+if [ ! -d "$DIR" ]; then
+    mkdir -p "$DIR"
+fi
 
-    # Delete file if it exists
-    if [ -f /home/vscode/upload/file$i.csv ]; then
-        rm /home/vscode/upload/file$i.csv
-    fi
-    
-    # Create CSV file
-    touch /home/vscode/upload/file$i.csv
+# Create the CSV file with the specified content
+cat <<EOL > $FILE
+name,description,created_at
+John Doe,Sample description 1,$(date +%Y-%m-%d)
+Jane Smith,Sample description 2,$(date +%Y-%m-%d)
+Alice Johnson,Sample description 3,$(date +%Y-%m-%d)
+EOL
 
-    # Add header to CSV file
-    echo "product_id,product_description,date_shipped" > /home/vscode/upload/file$i.csv
-
-    # Add rows to CSV file
-    echo "1,Product 1,2022-01-01" >> /home/vscode/upload/file$i.csv
-    echo "2,Product 2,2022-01-02" >> home/vscode/upload/file$i.csv
-    echo "3,Product 3,2022-01-03" >> home/vscode/upload/file$i.csv
-done
+echo "CSV file created at $FILE"

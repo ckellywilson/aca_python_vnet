@@ -1,18 +1,18 @@
 version: '3.4'
 
 services:
-  ipod-cron-put:
+  ipod-cron-get:
     image: ipod-cron-get
     build:
       context: .
       dockerfile: ./Dockerfile
     container_name: ipod-cron-get
-    volumes:
-      - ~/.ssh/:/home/vscode/.ssh/
+    volumes: 
+      - /home/vscode/.ssh/:/home/vscode/.ssh/
     environment:
-      - SFTP_SSH_KEY_PATH=/home/vscode/.ssh/id_ed25519
-      - SFTP_SERVER=13.84.132.136
-      - SFTP_PORT=22
-      - SFTP_USERNAME=vscode
-      - SFTP_REMOTE_PATH="/home/vscode/upload/"
-      - SFTP_LOCAL_PATH="/home/vscode/upload/"
+      SFTP_SSH_KEY_PATH: /home/vscode/.ssh/id_ed25519
+      SFTP_SERVER: 13.85.75.146
+      SFTP_PORT: 22
+      SFTP_USERNAME: vscode
+      SFTP_REMOTE_PATH: /home/vscode/upload/
+      SFTP_LOCAL_PATH: /home/vscode/upload/

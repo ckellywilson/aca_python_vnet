@@ -93,6 +93,13 @@ module "vnet_onprem" {
   tags                = var.tags
 }
 
+# execute command on vnet_onprem
+module "vm_onprem_command" {
+  source   = "./modules/vm/onprem/command"
+  location = var.location
+  vm_id    = module.vm_onprem.vm_id
+}
+
 module "vnet_cloud" {
   source              = "./modules/vnet/cloud"
   location            = var.location

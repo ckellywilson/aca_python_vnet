@@ -15,6 +15,6 @@ resource "azurerm_virtual_machine_run_command" "vm_onprem_upload" {
   virtual_machine_id = var.vm_id
 
   source {
-    script = file("${path.cwd}/infra/software/vm-onprem/uploadfiles.sh")
+    script = file("${path.cwd}/software/vm-onprem/uploadfiles.sh")
   }
 }

@@ -1,6 +1,9 @@
 import os
 import paramiko
 import time
+from dotenv import load_dotenv
+# Load environment variables from a .env file
+load_dotenv()
 
 
 def print_environment_variables():

@@ -20,6 +20,9 @@ RUN useradd -ms /bin/bash -G sudo vscode \
     && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && chown -R vscode:vscode /app
 
+# create upload directory and grant vscode user access
+RUN mkdir -p /home/vscode/upload && chown -R vscode:vscode /home/vscode/upload
+
 # switch to vscode user
 USER vscode
 
