@@ -1,12 +1,12 @@
 version: '3.4'
 
 services:
-  ipod-cron-get:
-    image: ipod-cron-get
+  sftp-get-job:
+    image: sftp-get-job:latest
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: ipod-cron-get
+    container_name: sftp-get-job
     volumes: 
       - /home/vscode/.ssh/:/home/vscode/.ssh/
     environment:

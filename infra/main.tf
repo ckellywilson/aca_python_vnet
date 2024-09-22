@@ -220,6 +220,14 @@ module "acr_null_build_mysql_cron" {
   dockerfile_context = "/../src/mysql-job"
 }
 
+module "sftp_get_job" {
+  source             = "./modules/acr/build-image-acr"
+  acr_name           = module.acr_aca.acr_name
+  image_name         = "sftp-get-job"
+  dockerfile_path    = "/../src/sftp-get-job/Dockerfile"
+  dockerfile_context = "/../src/sftp-get-job"
+}
+
 ################# ACA APPS #################
 # this deploys the app to the container
 module "aca_py_sample" {
