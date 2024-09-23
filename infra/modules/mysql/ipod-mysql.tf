@@ -35,6 +35,14 @@ resource "azurerm_mysql_flexible_server" "ipod_mysql" {
   backup_retention_days  = 7
 
   tags = var.tags
+
+  lifecycle {
+    ignore_changes = [
+      administrator_password,
+      zone,
+      high_availability[0].standby_availability_zone
+    ]
+  }
 }
 
 resource "azurerm_mysql_flexible_database" "ipod_db" {

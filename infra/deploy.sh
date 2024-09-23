@@ -38,7 +38,7 @@ echo "SSH key created successfully."
 
 # Create a tfvars file
 echo "Creating a tfvars file..."
-cat > ./infra/main.tfvars <<EOF
+cat > main.tfvars <<EOF
 prefix            = "rheem"
 location          = "$location"
 subscription_id   = "$subscription_id"
