@@ -22,5 +22,16 @@ RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 COPY app.py app.py
 COPY DigiCertGlobalRootCA.crt.pem DigiCertGlobalRootCA.crt.pem
 
+# create user vscode and grant them admin rights in the container
+RUN useradd -ms /bin/bash -G sudo vscode \
+    && echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && chown -R vscode:vscode /app
+
+# create upload directory and grant vscode user access
+RUN mkdir -p /home/vscode/upload && chown -R vscode:vscode /home/vscode/upload
+
+# switch to vscode user
+USER vscode
+
 # Set the entry point for the container
 CMD ["python", "app.py"]

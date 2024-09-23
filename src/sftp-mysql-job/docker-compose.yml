@@ -21,6 +21,7 @@ services:
     command: sh -c "./wait-for-it.sh db:3306 -- python app.py"
     volumes:
       - ./wait-for-it.sh:/app/wait-for-it.sh
+      - /home/vscode/.ssh/:/home/vscode/.ssh/
     ports:
       - "8000:8000"
     depends_on:
@@ -31,6 +32,12 @@ services:
       MYSQL_PASSWORD: "ipodpassword"
       MYSQL_HOST: db
       MYSQL_PORT: 3306
+      SFTP_SSH_KEY_PATH: /home/vscode/.ssh/id_ed25519
+      SFTP_SERVER: 13.66.66.116
+      SFTP_PORT: 4422
+      SFTP_USERNAME: vscode
+      SFTP_REMOTE_PATH: /home/vscode/upload/
+      SFTP_LOCAL_PATH: /home/vscode/upload/
     platform: linux/amd64
 
 volumes:
