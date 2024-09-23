@@ -2,3 +2,4 @@ mysql-connector-python==9.0.0
 python-dotenv==1.0.1
 paramiko==3.4.1
 pandas==2.2.3
+azure-monitor-opentelemetry==1.6.2

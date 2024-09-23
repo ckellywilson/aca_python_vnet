@@ -2,19 +2,31 @@ import os
 import paramiko
 from dotenv import load_dotenv
 import pandas as pd
-
 import mysql.connector
+
+# Import the `configure_azure_monitor()` function from the
+# `azure.monitor.opentelemetry` package.
+from azure.monitor.opentelemetry import configure_azure_monitor
+
+# Import the tracing api from the `opentelemetry` package.
+from opentelemetry import trace
+
+# Configure OpenTelemetry to use Azure Monitor with the
+# APPLICATIONINSIGHTS_CONNECTION_STRING environment variable.
+configure_azure_monitor()
 
 # Load environment variables from .env file
 load_dotenv()
 
-required_vars = ['MYSQL_DATABASE','MYSQL_USER','MYSQL_PASSWORD','MYSQL_HOST','MYSQL_PORT',
-                 'SFTP_SSH_KEY_PATH','SFTP_SERVER','SFTP_PORT','SFTP_USERNAME','SFTP_REMOTE_PATH','SFTP_LOCAL_PATH']
+required_vars = ['MYSQL_DATABASE', 'MYSQL_USER', 'MYSQL_PASSWORD', 'MYSQL_HOST', 'MYSQL_PORT',
+                 'SFTP_SSH_KEY_PATH', 'SFTP_SERVER', 'SFTP_PORT', 'SFTP_USERNAME', 'SFTP_REMOTE_PATH', 'SFTP_LOCAL_PATH']
+
 
 def print_required_vars():
     for var in required_vars:
         value = os.getenv(var)
         print(f"{var}: {value}")
+
 
 def validate_environment_variables():
     print('Validating environment variables...')
@@ -23,6 +35,7 @@ def validate_environment_variables():
             print(f'The {var} environment variable is not set!')
             return False
     return True
+
 
 def connect_to_sftp(hostname, port, username, ssh_key_path):
     ssh_client = paramiko.SSHClient()
@@ -39,13 +52,16 @@ def connect_to_sftp(hostname, port, username, ssh_key_path):
         print(f'An error occurred while connecting to the SFTP server: {e}')
         ssh_client.close()
         return None, None
-    
+
+
 def disconnect_from_sftp(ssh_client, sftp_client):
     try:
         sftp_client.close()
         ssh_client.close()
     except Exception as e:
-        print(f'An error occurred while disconnecting from the SFTP server: {e}')
+        print(
+            f'An error occurred while disconnecting from the SFTP server: {e}')
+
 
 def download_csv_files(sftp_client, remote_path, local_path):
     print(f'Downloading files from {remote_path} to {local_path}...')
@@ -55,6 +71,7 @@ def download_csv_files(sftp_client, remote_path, local_path):
             sftp_client.get(f'{remote_path}/{file}', f'{local_path}/{file}')
             print(f'{file} downloaded successfully')
     print('All files downloaded')
+
 
 def create_mysql_connection(host_name, user_name, user_password, db_name, db_port, ssl_ca):
     connection = None
@@ -73,6 +90,7 @@ def create_mysql_connection(host_name, user_name, user_password, db_name, db_por
         print(f"The error '{e}' occurred")
     return connection
 
+
 def execute_query(connection, query, data):
     cursor = connection.cursor()
     try:
@@ -81,6 +99,7 @@ def execute_query(connection, query, data):
         print("Query executed successfully")
     except mysql.connector.Error as e:
         print(f"The error '{e}' occurred")
+
 
 def ensure_table_exists(connection):
     create_table_query = """
@@ -93,6 +112,7 @@ def ensure_table_exists(connection):
     """
     execute_query(connection, create_table_query, None)
 
+
 def insert_csv_data(connection, csv_file):
     df = pd.read_csv(csv_file)
     for index, row in df.iterrows():
@@ -102,6 +122,7 @@ def insert_csv_data(connection, csv_file):
         """
         data = (row['name'], row['description'], row['created_at'])
         execute_query(connection, insert_query, data)
+
 
 def main():
     if not validate_environment_variables():
@@ -145,6 +166,7 @@ def main():
 
     disconnect_from_sftp(ssh_client, sftp_client)
     connection.close()
+
 
 if __name__ == '__main__':
     main()

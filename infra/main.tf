@@ -187,6 +187,13 @@ module "mysql_ipod" {
   admin_password      = module.kv_aca.mysql_root_password
 }
 
+module "app_insights" {
+  source              = "./modules/monitor/app-insights"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.tags
+}
+
 ################# Build ACR images and push to ACR #################
 module "acr_null_build_py_sample" {
   source             = "./modules/acr/build-image-acr"
@@ -242,7 +249,7 @@ module "aca_app_ipod" {
   acr_login_server              = module.acr_aca.acr_login_server
   mysql_host                    = module.mysql_ipod.ip_address
   mysql_password                = module.kv_aca.mysql_root_password
-  appinsights_connection_string = ""
+  appinsights_connection_string = module.app_insights.app_insights_connection_string
   image_name                    = module.acr_null_build_ipod.image_name
   tags                          = var.tags
 
@@ -263,20 +270,21 @@ module "aca_app_ipod_cups_proxy" {
 
 ################# ACA JOBS #################
 module "job_sftp_mysql" {
-  source                       = "./modules/aca/job-sftp-mysql"
-  resource_group_name          = azurerm_resource_group.rg.name
-  location                     = var.location
-  container_app_environment_id = module.aca_env.aca_env_id
-  user_managed_id              = module.identity.id
-  acr_login_server             = module.acr_aca.acr_login_server
-  key_vault_uri                = module.kv_aca.kv_uri
-  mysql_host                   = module.mysql_ipod.ip_address
-  mysql_password               = module.kv_aca.mysql_root_password
-  sftp_server                  = module.vm_onprem.public_ip
-  sftp_port                    = local.sftp_port
-  sftp_username                = var.vm_admin_username
-  image_name                   = module.acr_null_build_sftp_mysql_job.image_name
-  tags                         = var.tags
+  source                        = "./modules/aca/job-sftp-mysql"
+  resource_group_name           = azurerm_resource_group.rg.name
+  location                      = var.location
+  container_app_environment_id  = module.aca_env.aca_env_id
+  user_managed_id               = module.identity.id
+  acr_login_server              = module.acr_aca.acr_login_server
+  key_vault_uri                 = module.kv_aca.kv_uri
+  mysql_host                    = module.mysql_ipod.ip_address
+  mysql_password                = module.kv_aca.mysql_root_password
+  sftp_server                   = module.vm_onprem.public_ip
+  sftp_port                     = local.sftp_port
+  sftp_username                 = var.vm_admin_username
+  image_name                    = module.acr_null_build_sftp_mysql_job.image_name
+  appinsights_connection_string = module.app_insights.app_insights_connection_string
+  tags                          = var.tags
 
   depends_on = [module.acr_null_build_sftp_mysql_job]
 }

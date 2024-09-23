@@ -53,6 +53,10 @@ variable "image_name" {
   type = string
 }
 
+variable "appinsights_connection_string" {
+  type = string
+}
+
 locals {
   sftp_remote_path = "/home/${var.sftp_username}/upload"
   sftp_local_path  = "/home/${var.sftp_username}/upload"
@@ -123,6 +127,10 @@ resource "azurerm_container_app_job" "job_sftp_mysql" {
       env {
         name  = "SFTP_LOCAL_PATH"
         value = local.sftp_local_path
+      }
+      env {
+        name  = "APPLICATIONINSIGHTS_CONNECTION_STRING"
+        value = var.appinsights_connection_string
       }
 
       volume_mounts {

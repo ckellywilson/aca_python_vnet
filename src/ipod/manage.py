@@ -3,6 +3,17 @@
 import os
 import sys
 
+# Import the `configure_azure_monitor()` function from the
+# `azure.monitor.opentelemetry` package.
+from azure.monitor.opentelemetry import configure_azure_monitor
+
+# Import the tracing api from the `opentelemetry` package.
+from opentelemetry import trace
+
+# Configure OpenTelemetry to use Azure Monitor with the
+# APPLICATIONINSIGHTS_CONNECTION_STRING environment variable.
+configure_azure_monitor()
+
 
 def main():
     """Run administrative tasks."""
