@@ -13,7 +13,7 @@ from opentelemetry import trace
 
 # Configure OpenTelemetry to use Azure Monitor with the
 # APPLICATIONINSIGHTS_CONNECTION_STRING environment variable.
-configure_azure_monitor()
+# configure_azure_monitor()
 
 # Load environment variables from .env file
 load_dotenv()
