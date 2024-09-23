@@ -52,6 +52,7 @@ variable "tags" {
 locals {
   resource_group_name                = "${var.prefix}-rg"
   infrastructure_resource_group_name = "${var.prefix}-infra-rg"
+  sftp_port                          = 4422
 }
 
 terraform {
@@ -186,8 +187,7 @@ module "mysql_ipod" {
   admin_password      = module.kv_aca.mysql_root_password
 }
 
-################# ACR IMAGES #################
-# builds docker image using acr
+################# Build ACR images and push to ACR #################
 module "acr_null_build_py_sample" {
   source             = "./modules/acr/build-image-acr"
   acr_name           = module.acr_aca.acr_name
@@ -269,6 +269,7 @@ module "aca_app_ipod_cups_proxy" {
   depends_on                   = [module.aca_app_ipod]
 }
 
+################# ACA JOBS #################
 module "aca_job_mysql_cron" {
   source                       = "./modules/aca/job-mysql-cron"
   resource_group_name          = azurerm_resource_group.rg.name
@@ -282,4 +283,23 @@ module "aca_job_mysql_cron" {
   tags                         = var.tags
 
   depends_on = [module.acr_null_build_mysql_cron]
+}
+
+module "aca_job_sftp_get" {
+  source                       = "./modules/aca/job-sftp-get"
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = var.location
+  container_app_environment_id = module.aca_env.aca_env_id
+  user_managed_id              = module.identity.id
+  acr_login_server             = module.acr_aca.acr_login_server
+  key_vault_uri                = module.kv_aca.kv_uri
+  mysql_host                   = module.mysql_ipod.ip_address
+  mysql_password               = module.kv_aca.mysql_root_password
+  sftp_server                  = module.vm_onprem.public_ip
+  sftp_port                    = local.sftp_port
+  sftp_username                = var.vm_admin_username
+  image_name                   = module.sftp_get_job.image_name
+  tags                         = var.tags
+
+  depends_on = [module.sftp_get_job]
 }

@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   sftp-get-job:
-    image: sftp-get-job:latest
+    image: sftp-get-job:latest  
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -12,7 +12,7 @@ services:
     environment:
       SFTP_SSH_KEY_PATH: /home/vscode/.ssh/id_ed25519
       SFTP_SERVER: 13.85.75.146
-      SFTP_PORT: 22
+      SFTP_PORT: 4422
       SFTP_USERNAME: vscode
       SFTP_REMOTE_PATH: /home/vscode/upload/
       SFTP_LOCAL_PATH: /home/vscode/upload/

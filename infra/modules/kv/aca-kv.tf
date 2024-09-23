@@ -145,3 +145,7 @@ output "mysql_root_password" {
 output "mysql_ipod_password_secret_id" {
   value = azurerm_key_vault_secret.mysql_root_password.id
 }
+
+output "kv_uri" {
+  value = azurerm_key_vault.aca_kv.vault_uri
+}

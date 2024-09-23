@@ -21,19 +21,7 @@ locals {
       access                     = "Allow"
       protocol                   = "*"
       source_port_range          = "*"
-      destination_port_range     = "22"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
-
-    cups = {
-      name                       = "cups"
-      priority                   = 101
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "631"
+      destination_port_range     = "4422"
       source_address_prefix      = "*"
       destination_address_prefix = "*"
     }
