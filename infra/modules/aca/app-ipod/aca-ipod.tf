@@ -141,6 +141,7 @@ locals {
   yaml_content = templatefile("${path.module}/aca-ipod-template.yaml.tpl", {
     image_name     = var.image_name
     mysql_host     = var.mysql_host
+    appinsights_connection_string = var.appinsights_connection_string
   })
 }
 
@@ -148,6 +149,8 @@ resource "local_file" "aca_ipod_yaml" {
   content  = local.yaml_content
   filename = "${path.module}/aca-ipod.yaml"
 }
+
+# az account set --subscription ${var.subscription_id}
 
 resource "null_resource" "configure_ingress" {
   provisioner "local-exec" {

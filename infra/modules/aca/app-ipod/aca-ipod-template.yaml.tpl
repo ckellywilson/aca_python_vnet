@@ -41,3 +41,5 @@ properties:
           value : '*'
         - name: MYSQL_PORT
           value : 3306
+        - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          value: ${appinsights_connection_string}
