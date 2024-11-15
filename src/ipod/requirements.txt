@@ -1,4 +1,4 @@
-Flask==2.1.1
+Flask==2.2.5
 Flask-SQLAlchemy==2.5.1
 pycups==2.0.4
 python-dotenv>=1.0.1
