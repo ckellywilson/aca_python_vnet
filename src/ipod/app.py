@@ -83,6 +83,7 @@ def create_data():
 @app.route("/print", methods=["POST"])
 def print_view():
     html_file_path = None
+    pdf_file_path = None
     try:
         # Render the HTML content
         data = MyModel.query.all()
@@ -151,9 +152,9 @@ def print_view():
     finally:
         db.session.close()
         # Clean up the temporary files
-        if html_file_path and os.path.exists(html_file_path):
-            os.remove(html_file_path)
-            os.remove(pdf_file_path)
+        # if html_file_path and os.path.exists(html_file_path):
+        #     os.remove(html_file_path)
+        #     os.remove(pdf_file_path)
 
 
 @app.route("/data", methods=["GET"])

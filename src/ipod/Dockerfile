@@ -51,4 +51,4 @@ EXPOSE 631
 # RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 # USER appuser
 
-CMD ["sh", "-c", "configure-cups.sh && uv run -- flask run -p 8000 --host 0.0.0.0"]
+CMD ["sh", "-c", "configure-cups.sh && uv run -- uvicorn app:app --interface wsgi --port 8000 --host 0.0.0.0"]
