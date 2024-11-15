@@ -5,8 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "django==3.2.25",
-    "mysqlclient==2.2.4",
+    "Flask==3.1.0",
+    "Flask-SQLAlchemy==3.1.1",
     "pycups==2.0.4",
     "python-dotenv>=1.0.1",
+    "azure-monitor-opentelemetry==1.6.4",
+    "flask-wtf>=1.2.2",
+    "pymysql>=1.1.1",
 ]

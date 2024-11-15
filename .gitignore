@@ -21,3 +21,4 @@
 tfplan
 .env
 infra/modules/aca/app-ipod/aca-ipod.yaml
+**/instance/test.db

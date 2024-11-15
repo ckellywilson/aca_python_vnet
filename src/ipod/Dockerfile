@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.9-slim
+FROM ghcr.io/astral-sh/uv:python3.9-bookworm-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -29,14 +29,16 @@ RUN mkdir -p ~/root/PDF
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
-COPY requirements.txt /app/
+# # Copy the requirements file
+# COPY requirements.txt /app/
 
-# Install Python dependencies
-RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
+# # Install Python dependencies
+# RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 
 # Copy the project files
 COPY . /app/
+
+RUN uv sync --frozen
 
 # Expose the port that the app runs on
 EXPOSE 8000
@@ -49,5 +51,4 @@ EXPOSE 631
 # RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 # USER appuser
 
-# Run the Django development server
-CMD ["sh", "-c", "configure-cups.sh && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["sh", "-c", "configure-cups.sh && uv run -- flask run -p 8000 --host 0.0.0.0"]

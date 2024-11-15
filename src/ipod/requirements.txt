@@ -1,5 +1,5 @@
-mysqlclient==2.2.4
-django==3.2.25
+Flask==2.1.1
+Flask-SQLAlchemy==2.5.1
 pycups==2.0.4
 python-dotenv>=1.0.1
 azure-monitor-opentelemetry==1.6.2
